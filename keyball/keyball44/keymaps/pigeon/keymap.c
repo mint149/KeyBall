@@ -28,10 +28,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define _SCROLL 4
 
 // 長いキーをマクロに
-#define SCRLTRG LT(_SCROLL,KC_LNG2)
+#define SCRLTRG LT(_SCROLL,KC_BTN3)
 #define NOSPACE _______
-#define PREVTAB LCTL(KC_TAB)
-#define NEXTTAB LCTL(LSFT(KC_TAB))
+#define NEXTTAB LCTL(KC_TAB)
+#define PREVTAB LCTL(LSFT(KC_TAB))
 
 // キーコード定義
 enum custom_keycodes {
@@ -58,14 +58,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [1] = LAYOUT_universal(
-    _______, _______, KC_F2  , KC_F3  , KC_F4  , KC_F5  ,                   KC_1   , KC_2   , KC_3   , KC_4   , KC_5   , _______, 
+    KC_ESC , _______, KC_F2  , KC_F3  , KC_F4  , KC_F5  ,                   KC_1   , KC_2   , KC_3   , KC_4   , KC_5   , _______, 
     _______, KC_F6  , KC_F7  , KC_F8  , KC_F9  , KC_F10 ,                   KC_6   , KC_7   , KC_8   , KC_9   , KC_0   , _______, 
     _______, KC_F11 , KC_F12 , _______, _______, _______,                   _______, _______, _______, _______, _______, _______, 
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
   ),
 
   [2] = LAYOUT_universal(
-    _______, _______, _______, _______, _______, _______,                   KC_HOME, KC_PGDN, KC_PGUP,  KC_END, _______, _______, 
+    KC_ESC , _______, _______, _______, _______, _______,                   KC_HOME, KC_PGDN, KC_PGUP,  KC_END, _______, _______, 
     _______,CPI_D100,SCRL_DVI,SCRL_DVD,CPI_I100, _______,                   KC_LEFT, KC_DOWN, KC_UP  ,KC_RIGHT, _______, _______, 
     _______, _______, _______, _______, _______, _______,                   KC_MINS, KC_EQL , KC_BSLS, KC_LBRC, KC_RBRC, KC_GRV ,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
@@ -81,7 +81,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [4] = LAYOUT_universal(
         MAC, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______, 
     WINDOWS, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______, 
-    _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______, 
+   KBC_SAVE, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______, 
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
   ),
 };
