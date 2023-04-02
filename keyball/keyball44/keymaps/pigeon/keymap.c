@@ -32,6 +32,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define NOSPACE _______
 #define NEXTTAB LCTL(KC_TAB)
 #define PREVTAB LCTL(LSFT(KC_TAB))
+#define NEXTXLS LCTL(KC_PGUP)
+#define PREVXLS LCTL((KC_PGDN))
 
 // キーコード定義
 enum custom_keycodes {
@@ -72,7 +74,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [3] = LAYOUT_universal(
-    _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______, 
+    _______, _______, _______, _______, _______, _______,                   PREVXLS, _______, _______, NEXTXLS, _______, _______, 
     _______, _______, _______, _______, _______, _______,                   PREVTAB, KC_BTN1, KC_BTN2, NEXTTAB, _______, _______, 
     _______, _______, _______, _______, _______, _______,                   KC_BTN4, KC_BTN3, SCRLTRG, KC_BTN5, _______, _______, 
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
