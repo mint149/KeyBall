@@ -142,9 +142,9 @@ void oledkit_render_info_user(void) {
     oled_write(get_u8_str(get_highest_layer(layer_state), ' '), false);
 
     if(isWindows){
-      oled_write_P(PSTR("  Mode: Win"), false);
+      oled_write_P(PSTR("   Mode: Win"), false);
     }else{
-      oled_write_P(PSTR("  Mode: Mac"), false);
+      oled_write_P(PSTR("   Mode: Mac"), false);
     }
 }
 #endif
