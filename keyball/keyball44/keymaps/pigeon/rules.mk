@@ -1,3 +1,2 @@
 RGBLIGHT_ENABLE = no
-
 OLED_ENABLE = yes
