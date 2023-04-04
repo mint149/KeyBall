@@ -137,12 +137,6 @@ void pointing_device_init_user(void) {
     set_auto_mouse_enable(true);         // always required before the auto mouse feature will work
 }
 
-// 引数に渡されたレイヤーをデフォルトのレイヤーとする
-void persistent_default_layer_set(uint16_t default_layer) {
-  eeconfig_update_default_layer(default_layer);
-  default_layer_set(default_layer);
-}
-
 bool ime_off_only = false;
 bool ime_on_only = false;
 bool isWindows = false;
@@ -166,7 +160,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case MAC:
       if (record->event.pressed) {
         isWindows = false;
-        persistent_default_layer_set(1UL<<_MAC);
+        default_layer_set(1UL<<_MAC);
         SEND_STRING("Mac Mode");
       }
       return false;
@@ -174,7 +168,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case WINDOWS:
       if (record->event.pressed) {
         isWindows = true;
-        persistent_default_layer_set(1UL<<_WINDOWS);
+        default_layer_set(1UL<<_WINDOWS);
         SEND_STRING("Windows Mode");
       }
       return false;
