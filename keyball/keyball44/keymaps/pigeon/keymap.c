@@ -174,7 +174,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       if (record->event.pressed) {
         isWindows = false;
         default_layer_set(1UL<<_MAC);
-        // SEND_STRING("Mac Mode");
       }
       return false;
       break;
@@ -182,7 +181,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       if (record->event.pressed) {
         isWindows = true;
         default_layer_set(1UL<<_WINDOWS);
-        // SEND_STRING("Windows Mode");
       }
       return false;
       break;
@@ -197,11 +195,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     
         if (ime_off_only) {
           if(isWindows){
-            register_code(KC_INT5);
-            unregister_code(KC_INT5);
+            tap_code(KC_INT5);
           }else{
-            register_code(KC_LNG2);
-            unregister_code(KC_LNG2);
+            tap_code(KC_LNG2);
           }
         }
         ime_off_only = false;
@@ -219,11 +215,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     
         if (ime_on_only) {
           if(isWindows){
-            register_code(KC_INT4);
-            unregister_code(KC_INT4);
+            tap_code(KC_INT4);
           }else{
-            register_code(KC_LNG1);
-            unregister_code(KC_LNG1);
+            tap_code(KC_LNG1);
           }
         }
         ime_on_only = false;
