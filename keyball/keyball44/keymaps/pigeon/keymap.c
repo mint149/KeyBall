@@ -130,12 +130,22 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 
 #    include "lib/oledkit/oledkit.h"
 
+bool ime_off_only = false;
+bool ime_on_only = false;
+bool isWindows = false;
+
 void oledkit_render_info_user(void) {
     keyball_oled_render_keyinfo();
     keyball_oled_render_ballinfo();
     
     oled_write_P(PSTR("Layer:"), false);
     oled_write(get_u8_str(get_highest_layer(layer_state), ' '), false);
+
+    if(isWindows){
+      oled_write_P(PSTR("  Mode: Win"), false);
+    }else{
+      oled_write_P(PSTR("  Mode: Mac"), false);
+    }
 }
 #endif
 
@@ -143,10 +153,6 @@ void pointing_device_init_user(void) {
     // set_auto_mouse_layer(<mouse_layer>); // only required if AUTO_MOUSE_DEFAULT_LAYER is not set to index of <mouse_layer>
     set_auto_mouse_enable(true);         // always required before the auto mouse feature will work
 }
-
-bool ime_off_only = false;
-bool ime_on_only = false;
-bool isWindows = false;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   bool result = false;
@@ -168,7 +174,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       if (record->event.pressed) {
         isWindows = false;
         default_layer_set(1UL<<_MAC);
-        SEND_STRING("Mac Mode");
+        // SEND_STRING("Mac Mode");
       }
       return false;
       break;
@@ -176,7 +182,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       if (record->event.pressed) {
         isWindows = true;
         default_layer_set(1UL<<_WINDOWS);
-        SEND_STRING("Windows Mode");
+        // SEND_STRING("Windows Mode");
       }
       return false;
       break;
