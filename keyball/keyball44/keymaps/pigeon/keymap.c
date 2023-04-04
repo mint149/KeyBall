@@ -25,8 +25,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define _WINDOWS 1
 #define _LOWER 2
 #define _RAISE 3
-#define _MOUSE 4
-#define _SCROLL 5
+#define _ADJUST 4
+#define _MOUSE 5
+#define _SCROLL 6
 
 // 長いキーをマクロに
 #define SCRLTRG LT(_SCROLL,KC_BTN3)
@@ -82,6 +83,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
   ),
 
+  [_ADJUST] = LAYOUT_universal(
+    _______, _______, WINDOWS, _______, _______, _______,                   _______, _______, _______, _______, _______, _______, 
+    _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______, 
+   KBC_SAVE, _______, _______, _______, _______, _______,                   _______,     MAC, _______, _______, _______, _______, 
+                      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+  ),
   [_MOUSE] = LAYOUT_universal(
     _______, _______, _______, _______, _______, _______,                   _______, PREVXLS, NEXTXLS, _______, _______, _______, 
     _______, _______, _______, _______, _______, _______,                   PREVTAB, KC_BTN1, KC_BTN2, NEXTTAB, _______, _______, 
@@ -90,9 +97,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [_SCROLL] = LAYOUT_universal(
-        MAC, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______, 
-    WINDOWS, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______, 
-   KBC_SAVE, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______, 
+    _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______, 
+    _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______, 
+    _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______, 
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
   ),
 };
@@ -177,10 +184,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       if (record->event.pressed) {
         ime_off_only = true;
         layer_on(_LOWER);
-        // update_tri_layer(_LOWER, _RAISE, _ADJUST);
+        update_tri_layer(_LOWER, _RAISE, _ADJUST);
       } else {
         layer_off(_LOWER);
-        // update_tri_layer(_LOWER, _RAISE, _ADJUST);
+        update_tri_layer(_LOWER, _RAISE, _ADJUST);
     
         if (ime_off_only) {
           if(isWindows){
@@ -199,10 +206,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       if (record->event.pressed) {
         ime_on_only = true;
         layer_on(_RAISE);
-        // update_tri_layer(_LOWER, _RAISE, _ADJUST);
+        update_tri_layer(_LOWER, _RAISE, _ADJUST);
       } else {
         layer_off(_RAISE);
-        // update_tri_layer(_LOWER, _RAISE, _ADJUST);
+        update_tri_layer(_LOWER, _RAISE, _ADJUST);
     
         if (ime_on_only) {
           if(isWindows){
