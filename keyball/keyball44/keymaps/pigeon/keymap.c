@@ -35,8 +35,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DELETED _______
 #define NEXTTAB LCTL(KC_TAB)
 #define PREVTAB LCTL(LSFT(KC_TAB))
-#define NEXTXLS LCTL(KC_PGUP)
-#define PREVXLS LCTL((KC_PGDN))
+#define NEXTXLS LCTL(KC_PGDN)
+#define PREVXLS LCTL(KC_PGUP)
 
 // キーコード定義
 enum custom_keycodes {
