@@ -59,7 +59,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB , KC_Q   , KC_W   , KC_E   , KC_R   , KC_T   ,                   KC_Y   , KC_U   , KC_I   , KC_O   , KC_P   , KC_BSPC,
     KC_LCTL, KC_A   , KC_S   , KC_D   , KC_F   , KC_G   ,                   KC_H   , KC_J   , KC_K   , KC_L   , KC_SCLN, KC_ENT ,
     KC_LSFT, KC_Z   , KC_X   , KC_C   , KC_V   , KC_B   ,                   KC_N   , KC_M   , KC_COMM, KC_DOT , KC_SLSH, KC_QUOT,
-                      DELETED, DELETED, KC_LALT, IMEOFF , KC_SPC , KC_RGUI, IMEON  , NOSPACE, NOSPACE, DELETED
+                      DELETED, DELETED, KC_LALT, IMEOFF , KC_SPC , KC_RGUI, IMEON  , NOSPACE, NOSPACE, KC_DOT
   ),
 
   [_WINDOWS] = LAYOUT_universal(
@@ -132,7 +132,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 
 bool ime_off_only = false;
 bool ime_on_only = false;
-bool isWindows = false;
 
 void oledkit_render_info_user(void) {
     keyball_oled_render_keyinfo();
@@ -141,7 +140,7 @@ void oledkit_render_info_user(void) {
     oled_write_P(PSTR("Layer:"), false);
     oled_write(get_u8_str(get_highest_layer(layer_state), ' '), false);
 
-    if(isWindows){
+    if(get_highest_layer(default_layer_state) == _WINDOWS){
       oled_write_P(PSTR("   Mode: Win"), false);
     }else{
       oled_write_P(PSTR("   Mode: Mac"), false);
@@ -172,14 +171,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case MAC:
       if (record->event.pressed) {
-        isWindows = false;
         default_layer_set(1UL<<_MAC);
       }
       return false;
       break;
     case WINDOWS:
       if (record->event.pressed) {
-        isWindows = true;
         default_layer_set(1UL<<_WINDOWS);
       }
       return false;
@@ -194,10 +191,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         update_tri_layer(_LOWER, _RAISE, _ADJUST);
     
         if (ime_off_only) {
-          if(isWindows){
-            tap_code(KC_INT5);
-          }else{
-            tap_code(KC_LNG2);
+          switch (get_highest_layer(default_layer_state)) {
+            case _WINDOWS:
+              tap_code(KC_INT5);
+              break;
+            case _MAC: 
+              tap_code(KC_LNG2);
+              break;
+            default:
+              break;
           }
         }
         ime_off_only = false;
@@ -214,10 +216,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         update_tri_layer(_LOWER, _RAISE, _ADJUST);
     
         if (ime_on_only) {
-          if(isWindows){
-            tap_code(KC_INT4);
-          }else{
-            tap_code(KC_LNG1);
+          switch (get_highest_layer(default_layer_state)) {
+            case _WINDOWS:
+              tap_code(KC_INT4);
+              break;
+            case _MAC: 
+              tap_code(KC_LNG1);
+              break;
+            default:
+              break;
           }
         }
         ime_on_only = false;
