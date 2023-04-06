@@ -140,6 +140,7 @@ void oledkit_render_info_user(void) {
     keyball_oled_render_ballinfo();
     
     oled_write_P(PSTR("Layer:"), false);
+    // glcdfont.cのフォント配列[48]が文字「0」を示すので、48をレイヤの数値に足す
     oled_write_char(get_highest_layer(layer_state) + 48, false);
 
     oled_write_P(PSTR("  Mode:"), false);
