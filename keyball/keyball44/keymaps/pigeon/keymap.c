@@ -44,7 +44,12 @@ enum custom_keycodes {
   WINDOWS,
   IMEON,
   IMEOFF,
+  TGL_JIS
 };
+
+bool ime_off_only = false;
+bool ime_on_only = false;
+bool jis_mode = false;
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -85,7 +90,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_ADJUST] = LAYOUT_universal(
     _______, _______, WINDOWS, _______, _______, _______,                   _______, _______, _______, _______, _______, _______, 
-    _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______, 
+    _______, _______, _______, _______, _______, _______,                   _______, TGL_JIS, _______, _______, _______, _______, 
    KBC_SAVE, _______, _______, _______, _______, _______,                   _______,     MAC, _______, _______, _______, _______, 
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
   ),
@@ -129,9 +134,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 #ifdef OLED_ENABLE
 
 #    include "lib/oledkit/oledkit.h"
-
-bool ime_off_only = false;
-bool ime_on_only = false;
 
 void oledkit_render_info_user(void) {
     keyball_oled_render_keyinfo();
@@ -316,9 +318,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
       break;
+    case TGL_JIS:
+      if (record->event.pressed) {
+        jis_mode = !jis_mode;
+      }
+
+      return false;
+      break;
     default:
-      // result = true;
-      return twpair_on_jis(keycode, record);
+      if(jis_mode){
+        result = twpair_on_jis(keycode, record);
+      }else{
+        result = true;
+      }
       break;
   }
 
