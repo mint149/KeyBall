@@ -140,12 +140,20 @@ void oledkit_render_info_user(void) {
     keyball_oled_render_ballinfo();
     
     oled_write_P(PSTR("Layer:"), false);
-    oled_write(get_u8_str(get_highest_layer(layer_state), ' '), false);
+    oled_write_char(get_highest_layer(layer_state) + 48, false);
+
+    oled_write_P(PSTR("  Mode:"), false);
+
+    if(jis_mode){
+      oled_write_P(PSTR("JIS"), false);
+    }else{
+      oled_write_P(PSTR(" US"), false);
+    }
 
     if(get_highest_layer(default_layer_state) == _WINDOWS){
-      oled_write_P(PSTR("   Mode: Win"), false);
+      oled_write_P(PSTR(" Win"), false);
     }else{
-      oled_write_P(PSTR("   Mode: Mac"), false);
+      oled_write_P(PSTR(" Mac"), false);
     }
 }
 #endif
