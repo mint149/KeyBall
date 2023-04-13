@@ -97,7 +97,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_MOUSE] = LAYOUT_universal(
     _______, _______, _______, _______, _______, _______,                   _______, PREVXLS, NEXTXLS, _______, _______, _______, 
     _______, _______, _______, _______, _______, _______,                   PREVTAB, KC_BTN1, KC_BTN2, NEXTTAB, _______, _______, 
-    _______, _______, _______, _______, _______, _______,                   KC_BTN4, KC_BTN3, SCRLTRG, KC_BTN5, _______, _______, 
+    _______, _______, _______, _______, _______, _______,                   _______, KC_BTN3, SCRLTRG, _______, _______, _______, 
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
   ),
 
@@ -152,9 +152,9 @@ void oledkit_render_info_user(void) {
     }
 
     if(get_highest_layer(default_layer_state) == _WINDOWS){
-      oled_write_P(PSTR(" Win"), false);
+      oled_write_P(PSTR("-Win"), false);
     }else{
-      oled_write_P(PSTR(" Mac"), false);
+      oled_write_P(PSTR("-Mac"), false);
     }
 }
 #endif
