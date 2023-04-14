@@ -140,21 +140,40 @@ void oledkit_render_info_user(void) {
     keyball_oled_render_ballinfo();
     
     oled_write_P(PSTR("Layer:"), false);
-    // glcdfont.cのフォント配列[48]が文字「0」を示すので、48をレイヤの数値に足す
-    oled_write_char(get_highest_layer(layer_state) + 48, false);
 
-    oled_write_P(PSTR("  Mode:"), false);
+    switch (get_highest_layer(layer_state | default_layer_state)) {
+        case _MAC:
+            oled_write_P(PSTR("Mac   "), false);
+            break;
+        case _WINDOWS:
+            oled_write_P(PSTR("Win   "), false);
+            break;
+        case _LOWER:
+            oled_write_P(PSTR("Lower "), false);
+            break;
+        case _RAISE:
+            oled_write_P(PSTR("Raise "), false);
+            break;
+        case _ADJUST:
+            oled_write_P(PSTR("Adjust"), false);
+            break;
+        case _MOUSE:
+            oled_write_P(PSTR("Mouse "), false);
+            break;
+        case _SCROLL:
+            oled_write_P(PSTR("Scroll"), false);
+            break;
+        default:
+            oled_write_P(PSTR("Undef "), false);
+            break;
+    }
+
+    oled_write_P(PSTR(" Mode:"), false);
 
     if(jis_mode){
       oled_write_P(PSTR("JIS"), false);
     }else{
       oled_write_P(PSTR(" US"), false);
-    }
-
-    if(get_highest_layer(default_layer_state) == _WINDOWS){
-      oled_write_P(PSTR("-Win"), false);
-    }else{
-      oled_write_P(PSTR("-Mac"), false);
     }
 }
 #endif
