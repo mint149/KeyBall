@@ -38,6 +38,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define NEXTXLS LCTL(KC_PGDN)
 #define PREVXLS LCTL(KC_PGUP)
 
+// Keyboard Quantizer B用キー設定
+// 左側のキーをRemap上で右側のキーとして配置する
+#define AD_WO_L KC_F14
+#define ADV_ID0 KC_F15
+#define ADV_ID1 KC_F16
+#define ADV_ID2 KC_F17
+#define ADV_ID3 KC_F18
+#define ADV_ID4 KC_F19
+#define ADV_ID5 KC_F20
+#define ADV_ID6 KC_F21
+#define ADV_ID7 KC_F22
+#define SEL_BLE KC_F23
+#define SEL_USB KC_F24
+
 #define M_TEAMS_REPEAT 10000
 
 // キーコード定義
@@ -95,9 +109,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [_ADJUST] = LAYOUT_universal(
-    _______, _______, WINDOWS, _______, _______, _______,                   _______, _______, _______, _______, _______, _______, 
-    _______, _______, _______, _______, _______, _______,                   _______, TGL_JIS, _______, _______, _______, _______, 
-    M_TEAMS, _______, _______, _______, _______, _______,                   _______,     MAC, _______, _______, _______, _______, 
+    _______, _______, WINDOWS, _______, _______, _______,                   _______, SEL_USB, ADV_ID0, ADV_ID1, ADV_ID2, ADV_ID3, 
+    _______, AD_WO_L, _______, _______, _______, _______,                   _______, TGL_JIS, ADV_ID4, ADV_ID5, ADV_ID6, ADV_ID7, 
+    M_TEAMS, _______, _______, _______, _______, SEL_BLE,                   _______,     MAC, _______, _______, _______, _______, 
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
   ),
   [_MOUSE] = LAYOUT_universal(
