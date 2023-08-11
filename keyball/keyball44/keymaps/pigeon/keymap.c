@@ -21,8 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "quantum.h"
 
 // レイヤー定義
-#define _MAC 0
-#define _WINDOWS 1
+#define _WINDOWS 0
+#define _MAC 1
 #define _LOWER 2
 #define _RAISE 3
 #define _ADJUST 4
@@ -38,18 +38,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define NEXTXLS LCTL(KC_PGDN)
 #define PREVXLS LCTL(KC_PGUP)
 
+#define M_TEAMS_REPEAT 10000
+
 // キーコード定義
 enum custom_keycodes {
-  MAC = KEYBALL_SAFE_RANGE,
-  WINDOWS,
+  WINDOWS = KEYBALL_SAFE_RANGE,
+  MAC,
   IMEON,
   IMEOFF,
-  TGL_JIS
+  TGL_JIS,
+  M_TEAMS
 };
 
 bool ime_off_only = false;
 bool ime_on_only = false;
-bool jis_mode = false;
+bool jis_mode = true;
+
+bool m_teams_on = false;
+int m_teams_delay = 0;
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -60,18 +66,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //                   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
 
 
-  [_MAC] = LAYOUT_universal(
-    KC_TAB , KC_Q   , KC_W   , KC_E   , KC_R   , KC_T   ,                   KC_Y   , KC_U   , KC_I   , KC_O   , KC_P   , KC_BSPC,
-    KC_LCTL, KC_A   , KC_S   , KC_D   , KC_F   , KC_G   ,                   KC_H   , KC_J   , KC_K   , KC_L   , KC_SCLN, KC_ENT ,
-    KC_LSFT, KC_Z   , KC_X   , KC_C   , KC_V   , KC_B   ,                   KC_N   , KC_M   , KC_COMM, KC_DOT , KC_SLSH, KC_QUOT,
-                      DELETED, DELETED, KC_LALT, IMEOFF , KC_SPC , KC_RGUI, IMEON  , NOSPACE, NOSPACE, KC_DOT
-  ),
-
   [_WINDOWS] = LAYOUT_universal(
     KC_TAB , KC_Q   , KC_W   , KC_E   , KC_R   , KC_T   ,                   KC_Y   , KC_U   , KC_I   , KC_O   , KC_P   , KC_BSPC,
     KC_LCTL, KC_A   , KC_S   , KC_D   , KC_F   , KC_G   ,                   KC_H   , KC_J   , KC_K   , KC_L   , KC_SCLN, KC_ENT ,
     KC_LSFT, KC_Z   , KC_X   , KC_C   , KC_V   , KC_B   ,                   KC_N   , KC_M   , KC_COMM, KC_DOT , KC_SLSH, KC_QUOT,
-                      DELETED, DELETED, KC_LGUI, IMEOFF , KC_SPC , KC_RALT, IMEON  , NOSPACE, NOSPACE, DELETED
+                      DELETED, DELETED, KC_LGUI, IMEOFF , KC_SPC , KC_RALT, IMEON  , NOSPACE, NOSPACE, SCRLTRG
+  ),
+
+  [_MAC] = LAYOUT_universal(
+    KC_TAB , KC_Q   , KC_W   , KC_E   , KC_R   , KC_T   ,                   KC_Y   , KC_U   , KC_I   , KC_O   , KC_P   , KC_BSPC,
+    KC_LCTL, KC_A   , KC_S   , KC_D   , KC_F   , KC_G   ,                   KC_H   , KC_J   , KC_K   , KC_L   , KC_SCLN, KC_ENT ,
+    KC_LSFT, KC_Z   , KC_X   , KC_C   , KC_V   , KC_B   ,                   KC_N   , KC_M   , KC_COMM, KC_DOT , KC_SLSH, KC_QUOT,
+                      DELETED, DELETED, KC_LALT, IMEOFF , KC_SPC , KC_RGUI, IMEON  , NOSPACE, NOSPACE, SCRLTRG
   ),
 
   [_LOWER] = LAYOUT_universal(
@@ -82,8 +88,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [_RAISE] = LAYOUT_universal(
-    KC_ESC , _______, _______, _______, _______, _______,                   KC_HOME, KC_PGDN, KC_PGUP,  KC_END, _______, KC_DEL , 
-    _______,CPI_D100,SCRL_DVI,SCRL_DVD,CPI_I100, _______,                   KC_LEFT, KC_DOWN, KC_UP  ,KC_RIGHT, _______, _______, 
+    KC_ESC , _______, _______, _______, _______, _______,                   KC_HOME, PREVXLS, NEXTXLS,  KC_END, _______, KC_DEL , 
+    _______,CPI_D100,SCRL_DVI,SCRL_DVD,CPI_I100,KBC_SAVE,                   KC_LEFT, KC_DOWN, KC_UP  ,KC_RIGHT, _______, _______, 
     _______, _______, _______, _______, _______, _______,                   KC_MINS, KC_EQL , KC_LBRC, KC_RBRC, KC_BSLS, KC_GRV ,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
   ),
@@ -91,7 +97,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_ADJUST] = LAYOUT_universal(
     _______, _______, WINDOWS, _______, _______, _______,                   _______, _______, _______, _______, _______, _______, 
     _______, _______, _______, _______, _______, _______,                   _______, TGL_JIS, _______, _______, _______, _______, 
-   KBC_SAVE, _______, _______, _______, _______, _______,                   _______,     MAC, _______, _______, _______, _______, 
+    M_TEAMS, _______, _______, _______, _______, _______,                   _______,     MAC, _______, _______, _______, _______, 
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
   ),
   [_MOUSE] = LAYOUT_universal(
@@ -168,13 +174,21 @@ void oledkit_render_info_user(void) {
             break;
     }
 
-    oled_write_P(PSTR(" Mode:"), false);
+    oled_write_P(PSTR(" :"), false);
 
     if(jis_mode){
       oled_write_P(PSTR("JIS"), false);
     }else{
       oled_write_P(PSTR(" US"), false);
     }
+
+    oled_write_P(PSTR(":"), false);
+    if(m_teams_on){
+      oled_write_P(PSTR(" On"), false);
+    }else{
+      oled_write_P(PSTR("Off"), false);
+    }
+
 }
 #endif
 
@@ -268,6 +282,25 @@ void pointing_device_init_user(void) {
     set_auto_mouse_enable(true);         // always required before the auto mouse feature will work
 }
 
+//-------------------------------------------------------------
+//
+//  matrix_scan_user関数の中でフラグをチェックして必要なマクロを実行する。
+//  この関数はQMKががキーの押下をチェックするたび実行される。
+//
+
+// Runs constantly in the background, in a loop.
+void matrix_scan_user(void) {
+    if (m_teams_on) {
+        if (m_teams_delay >= M_TEAMS_REPEAT) {
+            // SEND_STRING("MCR");
+            send_string_with_delay("MCR\b\b\b", 200);
+            m_teams_delay = 0;
+        }
+        // カウンタをカウントアップ
+        m_teams_delay++;
+    }
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   bool result = false;
   // IMEキーの単押し判定用Switch
@@ -349,6 +382,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case TGL_JIS:
       if (record->event.pressed) {
         jis_mode = !jis_mode;
+      }
+
+      return false;
+      break;
+    case M_TEAMS:
+      if (record->event.pressed) {
+        m_teams_on = !m_teams_on;
+        m_teams_delay = 0;
       }
 
       return false;
