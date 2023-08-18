@@ -31,12 +31,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // 長いキーをマクロに
 #define SCRLTRG LT(_SCROLL,KC_BTN3)
-#define NOSPACE _______
-#define DELETED _______
+// #define NOSPACE _______
+// #define DELETED _______
+#define NOSPACE KC_MINS
+#define DELETED KC_MINS
 #define NEXTTAB LCTL(KC_TAB)
 #define PREVTAB LCTL(LSFT(KC_TAB))
 #define NEXTXLS LCTL(KC_PGDN)
 #define PREVXLS LCTL(KC_PGUP)
+
+// Keyboard Quantizer B用キー設定
+// 左側のキーをRemap上で右側のキーとして配置する
+#define AD_WO_L KC_F14
+#define ADV_ID0 KC_F15
+#define ADV_ID1 KC_F16
+#define ADV_ID2 KC_F17
+#define ADV_ID3 KC_F18
+#define ADV_ID4 KC_F19
+#define ADV_ID5 KC_F20
+#define ADV_ID6 KC_F21
+#define ADV_ID7 KC_F22
+#define SEL_BLE KC_F23
+#define SEL_USB KC_F24
 
 #define M_TEAMS_REPEAT 10000
 
@@ -71,7 +87,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB , KC_Q   , KC_W   , KC_E   , KC_R   , KC_T   ,                   KC_Y   , KC_U   , KC_I   , KC_O   , KC_P   , KC_BSPC,
     KC_LCTL, KC_A   , KC_S   , KC_D   , KC_F   , KC_G   ,                   KC_H   , KC_J   , KC_K   , KC_L   , KC_SCLN, KC_ENT ,
     KC_LSFT, KC_Z   , KC_X   , KC_C   , KC_V   , KC_B   , _______, _______, KC_N   , KC_M   , KC_COMM, KC_DOT , KC_SLSH, KC_QUOT,
-    DELETED, DELETED, DELETED, DELETED, KC_LGUI, IMEOFF , KC_SPC , KC_RALT, IMEON  , NOSPACE, NOSPACE, NOSPACE, SCRLTRG, DELETED
+    DELETED, DELETED, DELETED, DELETED, KC_LALT, IMEOFF , KC_SPC , KC_RGUI, IMEON  , NOSPACE, NOSPACE, NOSPACE, SCRLTRG, DELETED
   ),
 
   [_MAC] = LAYOUT_universal(
@@ -79,7 +95,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB , KC_Q   , KC_W   , KC_E   , KC_R   , KC_T   ,                   KC_Y   , KC_U   , KC_I   , KC_O   , KC_P   , KC_BSPC,
     KC_LCTL, KC_A   , KC_S   , KC_D   , KC_F   , KC_G   ,                   KC_H   , KC_J   , KC_K   , KC_L   , KC_SCLN, KC_ENT ,
     KC_LSFT, KC_Z   , KC_X   , KC_C   , KC_V   , KC_B   , _______, _______, KC_N   , KC_M   , KC_COMM, KC_DOT , KC_SLSH, KC_QUOT,
-    DELETED, DELETED, DELETED, DELETED, KC_LALT, IMEOFF , KC_SPC , KC_RGUI, IMEON  , NOSPACE, NOSPACE, NOSPACE, SCRLTRG, DELETED
+    DELETED, DELETED, DELETED, DELETED, KC_LGUI, IMEOFF , KC_SPC , KC_RALT, IMEON  , NOSPACE, NOSPACE, NOSPACE, SCRLTRG, DELETED
   ),
 
   [_LOWER] = LAYOUT_universal(
@@ -100,9 +116,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_ADJUST] = LAYOUT_universal(
     _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______, 
-    _______, _______, WINDOWS, _______, _______, _______,                   _______, _______, _______, _______, _______, _______, 
-    _______, _______, _______, _______, _______, _______,                   _______, TGL_JIS, _______, _______, _______, _______, 
-    M_TEAMS, _______, _______, _______, _______, _______, _______, _______, _______,     MAC, _______, _______, _______, _______, 
+    _______, _______, WINDOWS, _______, _______, _______,                   _______, SEL_USB, ADV_ID0, ADV_ID1, ADV_ID2, ADV_ID3, 
+    _______, AD_WO_L, _______, _______, _______, _______,                   _______, TGL_JIS, ADV_ID4, ADV_ID5, ADV_ID6, ADV_ID7, 
+    M_TEAMS, _______, _______, _______, _______, SEL_BLE, _______, _______, _______,     MAC, _______, _______, _______, _______, 
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______ 
   ),
 
@@ -341,9 +357,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       if (record->event.pressed) {
         ime_off_only = true;
         layer_on(_LOWER);
+        auto_mouse_layer_off();
         update_tri_layer(_LOWER, _RAISE, _ADJUST);
       } else {
         layer_off(_LOWER);
+        auto_mouse_layer_off();
         update_tri_layer(_LOWER, _RAISE, _ADJUST);
     
         if (ime_off_only) {
@@ -366,9 +384,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       if (record->event.pressed) {
         ime_on_only = true;
         layer_on(_RAISE);
+        auto_mouse_layer_off();
         update_tri_layer(_LOWER, _RAISE, _ADJUST);
       } else {
         layer_off(_RAISE);
+        auto_mouse_layer_off();
         update_tri_layer(_LOWER, _RAISE, _ADJUST);
     
         if (ime_on_only) {
