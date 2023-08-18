@@ -31,10 +31,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // 長いキーをマクロに
 #define SCRLTRG LT(_SCROLL,KC_BTN3)
-// #define NOSPACE _______
-// #define DELETED _______
-#define NOSPACE KC_MINS
-#define DELETED KC_MINS
+#define NOSPACE _______
+#define DELETED _______
 #define NEXTTAB LCTL(KC_TAB)
 #define PREVTAB LCTL(LSFT(KC_TAB))
 #define NEXTXLS LCTL(KC_PGDN)
