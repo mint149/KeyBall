@@ -347,9 +347,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       if (record->event.pressed) {
         ime_off_only = true;
         layer_on(_LOWER);
+        auto_mouse_layer_off();
         update_tri_layer(_LOWER, _RAISE, _ADJUST);
       } else {
         layer_off(_LOWER);
+        auto_mouse_layer_off();
         update_tri_layer(_LOWER, _RAISE, _ADJUST);
     
         if (ime_off_only) {
@@ -372,9 +374,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       if (record->event.pressed) {
         ime_on_only = true;
         layer_on(_RAISE);
+        auto_mouse_layer_off();
         update_tri_layer(_LOWER, _RAISE, _ADJUST);
       } else {
         layer_off(_RAISE);
+        auto_mouse_layer_off();
         update_tri_layer(_LOWER, _RAISE, _ADJUST);
     
         if (ime_on_only) {
