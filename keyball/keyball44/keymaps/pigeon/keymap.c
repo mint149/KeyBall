@@ -68,6 +68,7 @@ bool ime_off_only = false;
 bool ime_on_only = false;
 bool jis_mode = true;
 
+bool isRecording = false;
 bool m_teams_on = false;
 int m_teams_delay = 0;
 
@@ -110,7 +111,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_ADJUST] = LAYOUT_universal(
     _______, _______, WINDOWS, _______, _______, _______,                   _______, SEL_USB, ADV_ID0, ADV_ID1, ADV_ID2, ADV_ID3, 
-    _______, AD_WO_L, _______, _______, _______, _______,                   _______, TGL_JIS, ADV_ID4, ADV_ID5, ADV_ID6, ADV_ID7, 
+    _______, AD_WO_L, _______, DM_REC1, _______, DM_PLY1,                   _______, TGL_JIS, ADV_ID4, ADV_ID5, ADV_ID6, ADV_ID7, 
     M_TEAMS, _______, _______, _______, _______, SEL_BLE,                   _______,     MAC, _______, _______, _______, _______, 
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
   ),
@@ -153,14 +154,18 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 
 #ifdef OLED_ENABLE
 
-#    include "lib/oledkit/oledkit.h"
+#include "lib/oledkit/oledkit.h"
 
 void oledkit_render_info_user(void) {
     keyball_oled_render_keyinfo();
     keyball_oled_render_ballinfo();
     
-    oled_write_P(PSTR("Layer:"), false);
+    if(m_teams_on){
+      oled_write_P(PSTR("--- TEAMS ENABLED ---"), false);
+      return;
+    }
 
+    oled_write_P(PSTR("Layer:"), false);
     switch (get_highest_layer(layer_state | default_layer_state)) {
         case _MAC:
             oled_write_P(PSTR("Mac   "), false);
@@ -196,15 +201,23 @@ void oledkit_render_info_user(void) {
       oled_write_P(PSTR(" US"), false);
     }
 
-    oled_write_P(PSTR(":"), false);
-    if(m_teams_on){
-      oled_write_P(PSTR(" On"), false);
+    if(isRecording){
+      oled_write_P(PSTR(" REC"), false);
     }else{
-      oled_write_P(PSTR("Off"), false);
+      oled_write_P(PSTR("    "), false);
     }
-
 }
 #endif
+
+// マクロの記録を開始する時に起動されます。
+void dynamic_macro_record_start_user(void){
+  isRecording = true;
+}
+
+// マクロの記録を停止した時に起動されます。
+void dynamic_macro_record_end_user(int8_t direction){
+  isRecording = false;
+}
 
 /* Copyright 2018-2020 eswai <@eswai>
  *
