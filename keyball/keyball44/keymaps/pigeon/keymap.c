@@ -56,12 +56,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // キーコード定義
 enum custom_keycodes {
-  WINDOWS = KEYBALL_SAFE_RANGE,
-  MAC,
-  IMEON,
-  IMEOFF,
-  TGL_JIS,
-  M_TEAMS
+	WINDOWS = KEYBALL_SAFE_RANGE,
+	MAC,
+	IMEON,
+	IMEOFF,
+	TGL_JIS,
+	M_TEAMS
 };
 
 bool ime_off_only = false;
@@ -74,82 +74,81 @@ int m_teams_delay = 0;
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-  // テンプレ
-  // _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______, 
-  // _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______, 
-  // _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, 
-  //                   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+	// テンプレ
+	// _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______, 
+	// _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______, 
+	// _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, 
+	//                   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
 
+	[_WINDOWS] = LAYOUT_universal(
+		KC_TAB , KC_Q   , KC_W   , KC_E   , KC_R   , KC_T   ,                   KC_Y   , KC_U   , KC_I   , KC_O   , KC_P   , KC_BSPC,
+		KC_LCTL, KC_A   , KC_S   , KC_D   , KC_F   , KC_G   ,                   KC_H   , KC_J   , KC_K   , KC_L   , KC_SCLN, KC_ENT ,
+		KC_LSFT, KC_Z   , KC_X   , KC_C   , KC_V   , KC_B   ,                   KC_N   , KC_M   , KC_COMM, KC_DOT , KC_SLSH, KC_QUOT,
+											DM_PLY1, KC_LGUI, KC_LALT, IMEOFF , KC_SPC , KC_RGUI, IMEON  , NOSPACE, NOSPACE, DM_REC1
+	),
 
-  [_WINDOWS] = LAYOUT_universal(
-    KC_TAB , KC_Q   , KC_W   , KC_E   , KC_R   , KC_T   ,                   KC_Y   , KC_U   , KC_I   , KC_O   , KC_P   , KC_BSPC,
-    KC_LCTL, KC_A   , KC_S   , KC_D   , KC_F   , KC_G   ,                   KC_H   , KC_J   , KC_K   , KC_L   , KC_SCLN, KC_ENT ,
-    KC_LSFT, KC_Z   , KC_X   , KC_C   , KC_V   , KC_B   ,                   KC_N   , KC_M   , KC_COMM, KC_DOT , KC_SLSH, KC_QUOT,
-                      DELETED, DELETED, KC_LALT, IMEOFF , KC_SPC , KC_RGUI, IMEON  , NOSPACE, NOSPACE, SCRLTRG
-  ),
+	[_MAC] = LAYOUT_universal(
+		KC_TAB , KC_Q   , KC_W   , KC_E   , KC_R   , KC_T   ,                   KC_Y   , KC_U   , KC_I   , KC_O   , KC_P   , KC_BSPC,
+		KC_LCTL, KC_A   , KC_S   , KC_D   , KC_F   , KC_G   ,                   KC_H   , KC_J   , KC_K   , KC_L   , KC_SCLN, KC_ENT ,
+		KC_LSFT, KC_Z   , KC_X   , KC_C   , KC_V   , KC_B   ,                   KC_N   , KC_M   , KC_COMM, KC_DOT , KC_SLSH, KC_QUOT,
+											DM_PLY1, KC_LALT, KC_LGUI, IMEOFF , KC_SPC , KC_RCTL, IMEON  , NOSPACE, NOSPACE, DM_REC1
+	),
 
-  [_MAC] = LAYOUT_universal(
-    KC_TAB , KC_Q   , KC_W   , KC_E   , KC_R   , KC_T   ,                   KC_Y   , KC_U   , KC_I   , KC_O   , KC_P   , KC_BSPC,
-    KC_LCTL, KC_A   , KC_S   , KC_D   , KC_F   , KC_G   ,                   KC_H   , KC_J   , KC_K   , KC_L   , KC_SCLN, KC_ENT ,
-    KC_LSFT, KC_Z   , KC_X   , KC_C   , KC_V   , KC_B   ,                   KC_N   , KC_M   , KC_COMM, KC_DOT , KC_SLSH, KC_QUOT,
-                      DELETED, DELETED, KC_LGUI, IMEOFF , KC_SPC , KC_RALT, IMEON  , NOSPACE, NOSPACE, SCRLTRG
-  ),
+	[_LOWER] = LAYOUT_universal(
+		KC_ESC , _______, KC_F2  , KC_F3  , KC_F4  , KC_F5  ,                   KC_1   , KC_2   , KC_3   , KC_4   , KC_5   , KC_DEL , 
+		_______, KC_F6  , KC_F7  , KC_F8  , KC_F9  , KC_F10 ,                   KC_6   , KC_7   , KC_8   , KC_9   , KC_0   , _______, 
+		_______, KC_F11 , KC_F12 , _______, _______, _______,                   KC_MINS, KC_EQL , KC_LBRC, KC_RBRC, KC_BSLS, KC_GRV ,
+											_______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+	),
 
-  [_LOWER] = LAYOUT_universal(
-    KC_ESC , _______, KC_F2  , KC_F3  , KC_F4  , KC_F5  ,                   KC_1   , KC_2   , KC_3   , KC_4   , KC_5   , KC_DEL , 
-    _______, KC_F6  , KC_F7  , KC_F8  , KC_F9  , KC_F10 ,                   KC_6   , KC_7   , KC_8   , KC_9   , KC_0   , _______, 
-    _______, KC_F11 , KC_F12 , _______, _______, _______,                   KC_MINS, KC_EQL , KC_LBRC, KC_RBRC, KC_BSLS, KC_GRV ,
-                      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
-  ),
+	[_RAISE] = LAYOUT_universal(
+		KC_ESC , _______, _______, _______, _______, _______,                   KC_HOME, PREVXLS, NEXTXLS,  KC_END, _______, KC_DEL , 
+		_______,CPI_D100,SCRL_DVI,SCRL_DVD,CPI_I100,KBC_SAVE,                   KC_LEFT, KC_DOWN, KC_UP  ,KC_RIGHT, _______, _______, 
+		_______, _______, _______, _______, _______, _______,                   KC_MINS, KC_EQL , KC_LBRC, KC_RBRC, KC_BSLS, KC_GRV ,
+											_______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+	),
 
-  [_RAISE] = LAYOUT_universal(
-    KC_ESC , _______, _______, _______, _______, _______,                   KC_HOME, PREVXLS, NEXTXLS,  KC_END, _______, KC_DEL , 
-    _______,CPI_D100,SCRL_DVI,SCRL_DVD,CPI_I100,KBC_SAVE,                   KC_LEFT, KC_DOWN, KC_UP  ,KC_RIGHT, _______, _______, 
-    _______, _______, _______, _______, _______, _______,                   KC_MINS, KC_EQL , KC_LBRC, KC_RBRC, KC_BSLS, KC_GRV ,
-                      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
-  ),
+	[_ADJUST] = LAYOUT_universal(
+		_______, _______, WINDOWS, _______, _______, _______,                   _______, SEL_USB, ADV_ID0, ADV_ID1, ADV_ID2, ADV_ID3, 
+		_______, AD_WO_L, _______, _______, _______, _______,                   _______, TGL_JIS, ADV_ID4, ADV_ID5, ADV_ID6, ADV_ID7, 
+		M_TEAMS, _______, _______, _______, _______, SEL_BLE,                   _______,     MAC, _______, _______, _______, _______, 
+											_______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+	),
+	[_MOUSE] = LAYOUT_universal(
+		_______, _______, _______, _______, _______, _______,                   _______, PREVXLS, NEXTXLS, _______, _______, _______, 
+		_______, _______, _______, _______, _______, _______,                   PREVTAB, KC_BTN1, KC_BTN2, NEXTTAB, _______, _______, 
+		_______, _______, _______, _______, _______, _______,                   _______, KC_BTN3, SCRLTRG, _______, _______, _______, 
+											_______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+	),
 
-  [_ADJUST] = LAYOUT_universal(
-    _______, _______, WINDOWS, _______, _______, _______,                   _______, SEL_USB, ADV_ID0, ADV_ID1, ADV_ID2, ADV_ID3, 
-    _______, AD_WO_L, _______, DM_REC1, _______, DM_PLY1,                   _______, TGL_JIS, ADV_ID4, ADV_ID5, ADV_ID6, ADV_ID7, 
-    M_TEAMS, _______, _______, _______, _______, SEL_BLE,                   _______,     MAC, _______, _______, _______, _______, 
-                      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
-  ),
-  [_MOUSE] = LAYOUT_universal(
-    _______, _______, _______, _______, _______, _______,                   _______, PREVXLS, NEXTXLS, _______, _______, _______, 
-    _______, _______, _______, _______, _______, _______,                   PREVTAB, KC_BTN1, KC_BTN2, NEXTTAB, _______, _______, 
-    _______, _______, _______, _______, _______, _______,                   _______, KC_BTN3, SCRLTRG, _______, _______, _______, 
-                      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
-  ),
-
-  [_SCROLL] = LAYOUT_universal(
-    _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______, 
-    _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______, 
-    _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______, 
-                      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
-  ),
+	[_SCROLL] = LAYOUT_universal(
+		_______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______, 
+		_______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______, 
+		_______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______, 
+											_______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+	),
 };
 // clang-format on
 
 layer_state_t layer_state_set_user(layer_state_t state) {
-    // Auto enable scroll mode when the highest layer is 3
+	// Auto enable scroll mode when the highest layer is 3
 
-    // keyball_set_scroll_mode(get_highest_layer(state) == 3);
+	// keyball_set_scroll_mode(get_highest_layer(state) == 3);
 
-    switch(get_highest_layer(remove_auto_mouse_layer(state, true))) {
-        case _SCROLL:
-            // Auto enable scroll mode when the highest layer is 3
-            state = remove_auto_mouse_layer(state, false);
-            set_auto_mouse_enable(false);
-            keyball_set_scroll_mode(true);
-            break;
-        default:
-            set_auto_mouse_enable(true);
-            keyball_set_scroll_mode(false);
-            break;
-    }
+	switch(get_highest_layer(remove_auto_mouse_layer(state, true))) {
+		case _SCROLL:
+			// Auto enable scroll mode when the highest layer is 3
+			state = remove_auto_mouse_layer(state, false);
+			set_auto_mouse_enable(false);
+			keyball_set_scroll_mode(true);
+			break;
+		default:
+			set_auto_mouse_enable(true);
+			keyball_set_scroll_mode(false);
+			break;
+	}
 
-    return state;
+	return state;
 }
 
 #ifdef OLED_ENABLE
@@ -157,66 +156,66 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 #include "lib/oledkit/oledkit.h"
 
 void oledkit_render_info_user(void) {
-    keyball_oled_render_keyinfo();
-    keyball_oled_render_ballinfo();
-    
-    if(m_teams_on){
-      oled_write_P(PSTR("--- TEAMS ENABLED ---"), false);
-      return;
-    }
+	keyball_oled_render_keyinfo();
+	keyball_oled_render_ballinfo();
+	
+	if(m_teams_on){
+		oled_write_P(PSTR("--- TEAMS ENABLED ---"), false);
+		return;
+	}
 
-    oled_write_P(PSTR("Layer:"), false);
-    switch (get_highest_layer(layer_state | default_layer_state)) {
-        case _MAC:
-            oled_write_P(PSTR("Mac   "), false);
-            break;
-        case _WINDOWS:
-            oled_write_P(PSTR("Win   "), false);
-            break;
-        case _LOWER:
-            oled_write_P(PSTR("Lower "), false);
-            break;
-        case _RAISE:
-            oled_write_P(PSTR("Raise "), false);
-            break;
-        case _ADJUST:
-            oled_write_P(PSTR("Adjust"), false);
-            break;
-        case _MOUSE:
-            oled_write_P(PSTR("Mouse "), false);
-            break;
-        case _SCROLL:
-            oled_write_P(PSTR("Scroll"), false);
-            break;
-        default:
-            oled_write_P(PSTR("Undef "), false);
-            break;
-    }
+	oled_write_P(PSTR("Layer:"), false);
+	switch (get_highest_layer(layer_state | default_layer_state)) {
+		case _MAC:
+			oled_write_P(PSTR("Mac   "), false);
+			break;
+		case _WINDOWS:
+			oled_write_P(PSTR("Win   "), false);
+			break;
+		case _LOWER:
+			oled_write_P(PSTR("Lower "), false);
+			break;
+		case _RAISE:
+			oled_write_P(PSTR("Raise "), false);
+			break;
+		case _ADJUST:
+			oled_write_P(PSTR("Adjust"), false);
+			break;
+		case _MOUSE:
+			oled_write_P(PSTR("Mouse "), false);
+			break;
+		case _SCROLL:
+			oled_write_P(PSTR("Scroll"), false);
+			break;
+		default:
+			oled_write_P(PSTR("Undef "), false);
+			break;
+	}
 
-    oled_write_P(PSTR(" :"), false);
+	oled_write_P(PSTR(" :"), false);
 
-    if(jis_mode){
-      oled_write_P(PSTR("JIS"), false);
-    }else{
-      oled_write_P(PSTR(" US"), false);
-    }
+	if(jis_mode){
+		oled_write_P(PSTR("JIS"), false);
+	}else{
+		oled_write_P(PSTR(" US"), false);
+	}
 
-    if(isRecording){
-      oled_write_P(PSTR(" REC"), false);
-    }else{
-      oled_write_P(PSTR("    "), false);
-    }
+	if(isRecording){
+		oled_write_P(PSTR(" REC"), false);
+	}else{
+		oled_write_P(PSTR("    "), false);
+	}
 }
 #endif
 
 // マクロの記録を開始する時に起動されます。
 void dynamic_macro_record_start_user(void){
-  isRecording = true;
+	isRecording = true;
 }
 
 // マクロの記録を停止した時に起動されます。
 void dynamic_macro_record_end_user(int8_t direction){
-  isRecording = false;
+	isRecording = false;
 }
 
 /* Copyright 2018-2020 eswai <@eswai>
@@ -236,77 +235,77 @@ void dynamic_macro_record_end_user(int8_t direction){
  */
 
 /*
-  OSで日本語キーボード(logical bit pairing)と設定/認識されているキーボードで、
-  USキーキャップの文字、記号(typewriter pairing)を正しく出力する。
-  例: Shift + 2 で @ を入力する
-  変換された文字はキーリピートが無効です。
+	OSで日本語キーボード(logical bit pairing)と設定/認識されているキーボードで、
+	USキーキャップの文字、記号(typewriter pairing)を正しく出力する。
+	例: Shift + 2 で @ を入力する
+	変換された文字はキーリピートが無効です。
 */
 
 // #include QMK_KEYBOARD_H
 #include "keymap_japanese.h"
 
 const uint16_t us2jis[][2] = {
-  {KC_LPRN, JP_LPRN},
-  {KC_RPRN, JP_RPRN},
-  {KC_AT,   JP_AT},
-  {KC_LBRC, JP_LBRC},
-  {KC_RBRC, JP_RBRC},
-  {KC_LCBR, JP_LCBR},
-  {KC_RCBR, JP_RCBR},
-  {KC_MINS, JP_MINS},
-  {KC_EQL,  JP_EQL},
-  {KC_BSLS, JP_BSLS},
-  {KC_SCLN, JP_SCLN},
-  {KC_QUOT, JP_QUOT},
-  {KC_GRV,  JP_GRV},
-  {KC_PLUS, JP_PLUS},
-  {KC_COLN, JP_COLN},
-  {KC_UNDS, JP_UNDS},
-  {KC_PIPE, JP_PIPE},
-  {KC_DQT,  JP_DQUO},
-  {KC_ASTR, JP_ASTR},
-  {KC_TILD, JP_TILD},
-  {KC_AMPR, JP_AMPR},
-  {KC_CIRC, JP_CIRC},
+	{KC_LPRN, JP_LPRN},
+	{KC_RPRN, JP_RPRN},
+	{KC_AT,   JP_AT},
+	{KC_LBRC, JP_LBRC},
+	{KC_RBRC, JP_RBRC},
+	{KC_LCBR, JP_LCBR},
+	{KC_RCBR, JP_RCBR},
+	{KC_MINS, JP_MINS},
+	{KC_EQL,  JP_EQL},
+	{KC_BSLS, JP_BSLS},
+	{KC_SCLN, JP_SCLN},
+	{KC_QUOT, JP_QUOT},
+	{KC_GRV,  JP_GRV},
+	{KC_PLUS, JP_PLUS},
+	{KC_COLN, JP_COLN},
+	{KC_UNDS, JP_UNDS},
+	{KC_PIPE, JP_PIPE},
+	{KC_DQT,  JP_DQUO},
+	{KC_ASTR, JP_ASTR},
+	{KC_TILD, JP_TILD},
+	{KC_AMPR, JP_AMPR},
+	{KC_CIRC, JP_CIRC},
 };
 
 bool twpair_on_jis(uint16_t keycode, keyrecord_t *record) {
-  if (!record->event.pressed) return true;
+	if (!record->event.pressed) return true;
 
-  uint16_t skeycode; // シフトビットを反映したキーコード
-  bool lshifted = keyboard_report->mods & MOD_BIT(KC_LSFT); // シフトキーの状態
-  bool rshifted = keyboard_report->mods & MOD_BIT(KC_RSFT);
-  bool shifted = lshifted | rshifted;
+	uint16_t skeycode; // シフトビットを反映したキーコード
+	bool lshifted = keyboard_report->mods & MOD_BIT(KC_LSFT); // シフトキーの状態
+	bool rshifted = keyboard_report->mods & MOD_BIT(KC_RSFT);
+	bool shifted = lshifted | rshifted;
 
-  if (shifted) {
-    skeycode = QK_LSFT | keycode;
-  } else {
-    skeycode = keycode;
-  }
+	if (shifted) {
+		skeycode = QK_LSFT | keycode;
+	} else {
+		skeycode = keycode;
+	}
 
-  for (int i = 0; i < sizeof(us2jis) / sizeof(us2jis[0]); i++) {
-    if (us2jis[i][0] == skeycode) {
-      unregister_code(KC_LSFT);
-      unregister_code(KC_RSFT);
-      if ((us2jis[i][1] & QK_LSFT) == QK_LSFT || (us2jis[i][1] & QK_RSFT) == QK_RSFT) {
-        register_code(KC_LSFT);
-        tap_code(us2jis[i][1]);
-        unregister_code(KC_LSFT);
-      } else {
-        tap_code(us2jis[i][1]);
-      }
-      if (lshifted) register_code(KC_LSFT);
-      if (rshifted) register_code(KC_RSFT);
-      return false;
-    }
-  }
+	for (int i = 0; i < sizeof(us2jis) / sizeof(us2jis[0]); i++) {
+		if (us2jis[i][0] == skeycode) {
+			unregister_code(KC_LSFT);
+			unregister_code(KC_RSFT);
+			if ((us2jis[i][1] & QK_LSFT) == QK_LSFT || (us2jis[i][1] & QK_RSFT) == QK_RSFT) {
+				register_code(KC_LSFT);
+				tap_code(us2jis[i][1]);
+				unregister_code(KC_LSFT);
+			} else {
+				tap_code(us2jis[i][1]);
+			}
+			if (lshifted) register_code(KC_LSFT);
+			if (rshifted) register_code(KC_RSFT);
+			return false;
+		}
+	}
 
-  return true;
+	return true;
 }
 
 void pointing_device_init_user(void) {
-    // set_auto_mouse_layer(<mouse_layer>); // only required if AUTO_MOUSE_DEFAULT_LAYER is not set to index of <mouse_layer>
-    set_auto_mouse_enable(true);         // always required before the auto mouse feature will work
+	// set_auto_mouse_layer(<mouse_layer>); // only required if AUTO_MOUSE_DEFAULT_LAYER is not set to index of <mouse_layer>
+	set_auto_mouse_enable(true);         // always required before the auto mouse feature will work
 }
 
 //-------------------------------------------------------------
@@ -317,122 +316,122 @@ void pointing_device_init_user(void) {
 
 // Runs constantly in the background, in a loop.
 void matrix_scan_user(void) {
-    if (m_teams_on) {
-        if (m_teams_delay >= M_TEAMS_REPEAT) {
-            // SEND_STRING("MCR");
-            send_string_with_delay("MCR\b\b\b", 200);
-            m_teams_delay = 0;
-        }
-        // カウンタをカウントアップ
-        m_teams_delay++;
-    }
+	if (m_teams_on) {
+		if (m_teams_delay >= M_TEAMS_REPEAT) {
+			// SEND_STRING("MCR");
+			send_string_with_delay("MCR\b\b\b", 200);
+			m_teams_delay = 0;
+		}
+		// カウンタをカウントアップ
+		m_teams_delay++;
+	}
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  bool result = false;
-  // IMEキーの単押し判定用Switch
-  switch (keycode) {
-    case IMEOFF:
-      ime_on_only = false;
-      break;
-    case IMEON:
-      ime_off_only = false;
-      break;
-    default:
-      ime_off_only = false;
-      ime_on_only = false;
-      break;
-  }
-  switch (keycode) {
-    case MAC:
-      if (record->event.pressed) {
-        default_layer_set(1UL<<_MAC);
-      }
-      return false;
-      break;
-    case WINDOWS:
-      if (record->event.pressed) {
-        default_layer_set(1UL<<_WINDOWS);
-      }
-      return false;
-      break;
-    case IMEOFF:
-      if (record->event.pressed) {
-        ime_off_only = true;
-        layer_on(_LOWER);
-        auto_mouse_layer_off();
-        update_tri_layer(_LOWER, _RAISE, _ADJUST);
-      } else {
-        layer_off(_LOWER);
-        auto_mouse_layer_off();
-        update_tri_layer(_LOWER, _RAISE, _ADJUST);
-    
-        if (ime_off_only) {
-          switch (get_highest_layer(default_layer_state)) {
-            case _WINDOWS:
-              tap_code(KC_INT5);
-              break;
-            case _MAC: 
-              tap_code(KC_LNG2);
-              break;
-            default:
-              break;
-          }
-        }
-        ime_off_only = false;
-      }
-      return false;
-      break;
-    case IMEON:
-      if (record->event.pressed) {
-        ime_on_only = true;
-        layer_on(_RAISE);
-        auto_mouse_layer_off();
-        update_tri_layer(_LOWER, _RAISE, _ADJUST);
-      } else {
-        layer_off(_RAISE);
-        auto_mouse_layer_off();
-        update_tri_layer(_LOWER, _RAISE, _ADJUST);
-    
-        if (ime_on_only) {
-          switch (get_highest_layer(default_layer_state)) {
-            case _WINDOWS:
-              tap_code(KC_INT4);
-              break;
-            case _MAC: 
-              tap_code(KC_LNG1);
-              break;
-            default:
-              break;
-          }
-        }
-        ime_on_only = false;
-      }
-      return false;
-      break;
-    case TGL_JIS:
-      if (record->event.pressed) {
-        jis_mode = !jis_mode;
-      }
+	bool result = false;
+	// IMEキーの単押し判定用Switch
+	switch (keycode) {
+		case IMEOFF:
+			ime_on_only = false;
+			break;
+		case IMEON:
+			ime_off_only = false;
+			break;
+		default:
+			ime_off_only = false;
+			ime_on_only = false;
+			break;
+	}
+	switch (keycode) {
+		case MAC:
+			if (record->event.pressed) {
+				default_layer_set(1UL<<_MAC);
+			}
+			return false;
+			break;
+		case WINDOWS:
+			if (record->event.pressed) {
+				default_layer_set(1UL<<_WINDOWS);
+			}
+			return false;
+			break;
+		case IMEOFF:
+			if (record->event.pressed) {
+				ime_off_only = true;
+				layer_on(_LOWER);
+				auto_mouse_layer_off();
+				update_tri_layer(_LOWER, _RAISE, _ADJUST);
+			} else {
+				layer_off(_LOWER);
+				auto_mouse_layer_off();
+				update_tri_layer(_LOWER, _RAISE, _ADJUST);
+		
+				if (ime_off_only) {
+					switch (get_highest_layer(default_layer_state)) {
+						case _WINDOWS:
+							tap_code(KC_INT5);
+							break;
+						case _MAC: 
+							tap_code(KC_LNG2);
+							break;
+						default:
+							break;
+					}
+				}
+				ime_off_only = false;
+			}
+			return false;
+			break;
+		case IMEON:
+			if (record->event.pressed) {
+				ime_on_only = true;
+				layer_on(_RAISE);
+				auto_mouse_layer_off();
+				update_tri_layer(_LOWER, _RAISE, _ADJUST);
+			} else {
+				layer_off(_RAISE);
+				auto_mouse_layer_off();
+				update_tri_layer(_LOWER, _RAISE, _ADJUST);
+		
+				if (ime_on_only) {
+					switch (get_highest_layer(default_layer_state)) {
+						case _WINDOWS:
+							tap_code(KC_INT4);
+							break;
+						case _MAC: 
+							tap_code(KC_LNG1);
+							break;
+						default:
+							break;
+					}
+				}
+				ime_on_only = false;
+			}
+			return false;
+			break;
+		case TGL_JIS:
+			if (record->event.pressed) {
+				jis_mode = !jis_mode;
+			}
 
-      return false;
-      break;
-    case M_TEAMS:
-      if (record->event.pressed) {
-        m_teams_on = !m_teams_on;
-        m_teams_delay = 0;
-      }
+			return false;
+			break;
+		case M_TEAMS:
+			if (record->event.pressed) {
+				m_teams_on = !m_teams_on;
+				m_teams_delay = 0;
+			}
 
-      return false;
-      break;
-    default:
-      if(jis_mode){
-        result = twpair_on_jis(keycode, record);
-      }else{
-        result = true;
-      }
-      break;
-  }
+			return false;
+			break;
+		default:
+			if(jis_mode){
+				result = twpair_on_jis(keycode, record);
+			}else{
+				result = true;
+			}
+			break;
+	}
 
-  return result;
+	return result;
 }
