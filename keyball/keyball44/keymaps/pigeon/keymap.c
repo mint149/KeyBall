@@ -73,6 +73,7 @@ bool isRecording = false;
 bool isTeamsOn = false;
 bool isMouseOnly = false;
 int teamsDelay = 0;
+int pairingId = -1;
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -86,28 +87,28 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		KC_TAB , KC_Q   , KC_W   , KC_E   , KC_R   , KC_T   ,                   KC_Y   , KC_U   , KC_I   , KC_O   , KC_P   , KC_BSPC,
 		KC_LCTL, KC_A   , KC_S   , KC_D   , KC_F   , KC_G   ,                   KC_H   , KC_J   , KC_K   , KC_L   , KC_SCLN, KC_ENT ,
 		KC_LSFT, KC_Z   , KC_X   , KC_C   , KC_V   , KC_B   ,                   KC_N   , KC_M   , KC_COMM, KC_DOT , KC_SLSH, KC_QUOT,
-											DM_PLY1, DM_PLY2, KC_LALT, IMEOFF , KC_SPC , KC_RGUI, IMEON  , NOSPACE, NOSPACE, TGL_MS
+											DM_PLY1, KC_LGUI, KC_LALT, IMEOFF , KC_SPC , KC_RGUI, IMEON  , NOSPACE, NOSPACE, DELETED
 	),
 
 	[_MAC] = LAYOUT_universal(
 		KC_TAB , KC_Q   , KC_W   , KC_E   , KC_R   , KC_T   ,                   KC_Y   , KC_U   , KC_I   , KC_O   , KC_P   , KC_BSPC,
 		KC_LCTL, KC_A   , KC_S   , KC_D   , KC_F   , KC_G   ,                   KC_H   , KC_J   , KC_K   , KC_L   , KC_SCLN, KC_ENT ,
 		KC_LSFT, KC_Z   , KC_X   , KC_C   , KC_V   , KC_B   ,                   KC_N   , KC_M   , KC_COMM, KC_DOT , KC_SLSH, KC_QUOT,
-											DM_PLY1, DM_PLY2, KC_LGUI, IMEOFF , KC_SPC , KC_RCTL, IMEON  , NOSPACE, NOSPACE, TGL_MS
+											DM_PLY1, KC_LALT, KC_LGUI, IMEOFF , KC_SPC , KC_RCTL, IMEON  , NOSPACE, NOSPACE, DELETED
 	),
 
 	[_LOWER] = LAYOUT_universal(
 		KC_ESC , _______, KC_F2  , KC_F3  , KC_F4  , KC_F5  ,                   KC_1   , KC_2   , KC_3   , KC_4   , KC_5   , KC_DEL , 
 		_______, KC_F6  , KC_F7  , KC_F8  , KC_F9  , KC_F10 ,                   KC_6   , KC_7   , KC_8   , KC_9   , KC_0   , _______, 
 		_______, KC_F11 , KC_F12 , _______, _______, _______,                   KC_MINS, KC_EQL , KC_LBRC, KC_RBRC, KC_BSLS, KC_GRV ,
-											_______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+											_______, _______, _______, _______, _______, _______, _______, _______, _______, TGL_MS
 	),
 
 	[_RAISE] = LAYOUT_universal(
 		KC_ESC , _______, _______, _______, _______, _______,                   KC_HOME, PREVXLS, NEXTXLS,  KC_END, _______, KC_DEL , 
 		_______,CPI_D100,SCRL_DVI,SCRL_DVD,CPI_I100,KBC_SAVE,                   KC_LEFT, KC_DOWN, KC_UP  ,KC_RIGHT, _______, _______, 
 		_______, _______, _______, _______, _______, _______,                   KC_MINS, KC_EQL , KC_LBRC, KC_RBRC, KC_BSLS, KC_GRV ,
-											DM_REC1, DM_REC2, _______, _______, _______, _______, _______, _______, _______, _______
+											DM_REC1, _______, _______, _______, _______, _______, _______, _______, _______, _______
 	),
 
 	[_ADJUST] = LAYOUT_universal(
@@ -145,6 +146,10 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 			keyball_set_scroll_mode(true);
 			break;
 		default:
+			if(isMouseOnly){
+				keyball_set_scroll_mode(false);
+				break;
+			}
 			set_auto_mouse_enable(true);
 			keyball_set_scroll_mode(false);
 			break;
@@ -157,13 +162,77 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 
 #include "lib/oledkit/oledkit.h"
 
+static const char *format_4d(int8_t d) {
+    static char buf[5] = {0}; // max width (4) + NUL (1)
+    char        lead   = ' ';
+    if (d < 0) {
+        d    = -d;
+        lead = '-';
+    }
+    buf[3] = (d % 10) + '0';
+    d /= 10;
+    if (d == 0) {
+        buf[2] = lead;
+        lead   = ' ';
+    } else {
+        buf[2] = (d % 10) + '0';
+        d /= 10;
+    }
+    if (d == 0) {
+        buf[1] = lead;
+        lead   = ' ';
+    } else {
+        buf[1] = (d % 10) + '0';
+        d /= 10;
+    }
+    buf[0] = lead;
+    return buf;
+}
+
 void oledkit_render_info_user(void) {
-	keyball_oled_render_keyinfo();
-	keyball_oled_render_ballinfo();
-	
-	if(isTeamsOn){
-		oled_write_P(PSTR("--- TEAMS ENABLED ---"), false);
-		return;
+	// keyball_oled_render_keyinfo();
+	// keyball_oled_render_ballinfo();
+
+    oled_write_P(PSTR("CPI:"), false);
+    oled_write(format_4d(keyball_get_cpi()) + 1, false);
+    oled_write_P(PSTR("00 "), false);
+
+	switch(pairingId){
+		case 0:
+			oled_write_P(PSTR("BLE:0      "), false);
+			break;
+
+		case 1:
+			oled_write_P(PSTR("BLE:1      "), false);
+			break;
+
+		case 2:
+			oled_write_P(PSTR("BLE:2      "), false);
+			break;
+
+		case 3:
+			oled_write_P(PSTR("BLE:3      "), false);
+			break;
+
+		case 4:
+			oled_write_P(PSTR("BLE:4      "), false);
+			break;
+
+		case 5:
+			oled_write_P(PSTR("BLE:5      "), false);
+			break;
+
+		case 6:
+			oled_write_P(PSTR("BLE:6      "), false);
+			break;
+
+		case 7:
+			oled_write_P(PSTR("BLE:7      "), false);
+			break;
+
+		default:
+		    oled_write_P(PSTR("USB:       "), false);
+			break;
 	}
 
 	oled_write_P(PSTR("Layer:"), false);
@@ -206,6 +275,12 @@ void oledkit_render_info_user(void) {
 		oled_write_P(PSTR(" REC"), false);
 	}else{
 		oled_write_P(PSTR("    "), false);
+	}
+
+	if(isTeamsOn){
+		oled_write_P(PSTR("--- TEAMS ENABLED ---"), false);
+	}else{
+		oled_write_P(PSTR("                     "), false);
 	}
 }
 #endif
@@ -344,6 +419,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 			imeOnOnly = false;
 			break;
 	}
+
 	switch (keycode) {
 		case MAC:
 			if (record->event.pressed) {
@@ -351,12 +427,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 			}
 			return false;
 			break;
+
 		case WINDOWS:
 			if (record->event.pressed) {
 				default_layer_set(1UL<<_WINDOWS);
 			}
 			return false;
 			break;
+
 		case IMEOFF:
 			if (record->event.pressed) {
 				imeOffOnly = true;
@@ -384,6 +462,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 			}
 			return false;
 			break;
+
 		case IMEON:
 			if (record->event.pressed) {
 				imeOnOnly = true;
@@ -411,6 +490,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 			}
 			return false;
 			break;
+
 		case TGL_JIS:
 			if (record->event.pressed) {
 				isJisMode = !isJisMode;
@@ -426,6 +506,64 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 			return false;
 			break;
+		
+		case TGL_MS:
+			if (record->event.pressed) {
+				if(isMouseOnly){
+					isMouseOnly = false;
+					set_auto_mouse_enable(true);
+				}else{
+					isMouseOnly = true;
+					set_auto_mouse_enable(false);
+					layer_on(_MOUSE);
+				}
+			}
+			return false;
+
+			break;
+
+		case AD_WO_L:
+			return true;
+
+		case ADV_ID0:
+			pairingId = 0;
+			return true;
+
+		case ADV_ID1:
+			pairingId = 1;
+			return true;
+
+		case ADV_ID2:
+			pairingId = 2;
+			return true;
+
+		case ADV_ID3:
+			pairingId = 3;
+			return true;
+
+		case ADV_ID4:
+			pairingId = 4;
+			return true;
+
+		case ADV_ID5:
+			pairingId = 5;
+			return true;
+
+		case ADV_ID6:
+			pairingId = 6;
+			return true;
+
+		case ADV_ID7:
+			pairingId = 7;
+			return true;
+
+		case SEL_BLE:
+			return true;
+
+		case SEL_USB:
+			pairingId = -1;
+			return true;
+
 		default:
 			if(isJisMode){
 				result = twpair_on_jis(keycode, record);
