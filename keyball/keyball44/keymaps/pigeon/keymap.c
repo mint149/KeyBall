@@ -61,16 +61,18 @@ enum custom_keycodes {
 	IMEON,
 	IMEOFF,
 	TGL_JIS,
-	M_TEAMS
+	M_TEAMS,
+	TGL_MS
 };
 
-bool ime_off_only = false;
-bool ime_on_only = false;
-bool jis_mode = true;
+bool imeOffOnly = false;
+bool imeOnOnly = false;
+bool isJisMode = true;
 
 bool isRecording = false;
-bool m_teams_on = false;
-int m_teams_delay = 0;
+bool isTeamsOn = false;
+bool isMouseOnly = false;
+int teamsDelay = 0;
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -84,14 +86,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		KC_TAB , KC_Q   , KC_W   , KC_E   , KC_R   , KC_T   ,                   KC_Y   , KC_U   , KC_I   , KC_O   , KC_P   , KC_BSPC,
 		KC_LCTL, KC_A   , KC_S   , KC_D   , KC_F   , KC_G   ,                   KC_H   , KC_J   , KC_K   , KC_L   , KC_SCLN, KC_ENT ,
 		KC_LSFT, KC_Z   , KC_X   , KC_C   , KC_V   , KC_B   ,                   KC_N   , KC_M   , KC_COMM, KC_DOT , KC_SLSH, KC_QUOT,
-											DM_PLY1, KC_LGUI, KC_LALT, IMEOFF , KC_SPC , KC_RGUI, IMEON  , NOSPACE, NOSPACE, DM_REC1
+											DM_PLY1, DM_PLY2, KC_LALT, IMEOFF , KC_SPC , KC_RGUI, IMEON  , NOSPACE, NOSPACE, TGL_MS
 	),
 
 	[_MAC] = LAYOUT_universal(
 		KC_TAB , KC_Q   , KC_W   , KC_E   , KC_R   , KC_T   ,                   KC_Y   , KC_U   , KC_I   , KC_O   , KC_P   , KC_BSPC,
 		KC_LCTL, KC_A   , KC_S   , KC_D   , KC_F   , KC_G   ,                   KC_H   , KC_J   , KC_K   , KC_L   , KC_SCLN, KC_ENT ,
 		KC_LSFT, KC_Z   , KC_X   , KC_C   , KC_V   , KC_B   ,                   KC_N   , KC_M   , KC_COMM, KC_DOT , KC_SLSH, KC_QUOT,
-											DM_PLY1, KC_LALT, KC_LGUI, IMEOFF , KC_SPC , KC_RCTL, IMEON  , NOSPACE, NOSPACE, DM_REC1
+											DM_PLY1, DM_PLY2, KC_LGUI, IMEOFF , KC_SPC , KC_RCTL, IMEON  , NOSPACE, NOSPACE, TGL_MS
 	),
 
 	[_LOWER] = LAYOUT_universal(
@@ -105,7 +107,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		KC_ESC , _______, _______, _______, _______, _______,                   KC_HOME, PREVXLS, NEXTXLS,  KC_END, _______, KC_DEL , 
 		_______,CPI_D100,SCRL_DVI,SCRL_DVD,CPI_I100,KBC_SAVE,                   KC_LEFT, KC_DOWN, KC_UP  ,KC_RIGHT, _______, _______, 
 		_______, _______, _______, _______, _______, _______,                   KC_MINS, KC_EQL , KC_LBRC, KC_RBRC, KC_BSLS, KC_GRV ,
-											_______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+											DM_REC1, DM_REC2, _______, _______, _______, _______, _______, _______, _______, _______
 	),
 
 	[_ADJUST] = LAYOUT_universal(
@@ -159,7 +161,7 @@ void oledkit_render_info_user(void) {
 	keyball_oled_render_keyinfo();
 	keyball_oled_render_ballinfo();
 	
-	if(m_teams_on){
+	if(isTeamsOn){
 		oled_write_P(PSTR("--- TEAMS ENABLED ---"), false);
 		return;
 	}
@@ -194,7 +196,7 @@ void oledkit_render_info_user(void) {
 
 	oled_write_P(PSTR(" :"), false);
 
-	if(jis_mode){
+	if(isJisMode){
 		oled_write_P(PSTR("JIS"), false);
 	}else{
 		oled_write_P(PSTR(" US"), false);
@@ -316,14 +318,14 @@ void pointing_device_init_user(void) {
 
 // Runs constantly in the background, in a loop.
 void matrix_scan_user(void) {
-	if (m_teams_on) {
-		if (m_teams_delay >= M_TEAMS_REPEAT) {
+	if (isTeamsOn) {
+		if (teamsDelay >= M_TEAMS_REPEAT) {
 			// SEND_STRING("MCR");
 			send_string_with_delay("MCR\b\b\b", 200);
-			m_teams_delay = 0;
+			teamsDelay = 0;
 		}
 		// カウンタをカウントアップ
-		m_teams_delay++;
+		teamsDelay++;
 	}
 }
 
@@ -332,14 +334,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	// IMEキーの単押し判定用Switch
 	switch (keycode) {
 		case IMEOFF:
-			ime_on_only = false;
+			imeOnOnly = false;
 			break;
 		case IMEON:
-			ime_off_only = false;
+			imeOffOnly = false;
 			break;
 		default:
-			ime_off_only = false;
-			ime_on_only = false;
+			imeOffOnly = false;
+			imeOnOnly = false;
 			break;
 	}
 	switch (keycode) {
@@ -357,7 +359,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 			break;
 		case IMEOFF:
 			if (record->event.pressed) {
-				ime_off_only = true;
+				imeOffOnly = true;
 				layer_on(_LOWER);
 				auto_mouse_layer_off();
 				update_tri_layer(_LOWER, _RAISE, _ADJUST);
@@ -366,7 +368,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 				auto_mouse_layer_off();
 				update_tri_layer(_LOWER, _RAISE, _ADJUST);
 		
-				if (ime_off_only) {
+				if (imeOffOnly) {
 					switch (get_highest_layer(default_layer_state)) {
 						case _WINDOWS:
 							tap_code(KC_INT5);
@@ -378,13 +380,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 							break;
 					}
 				}
-				ime_off_only = false;
+				imeOffOnly = false;
 			}
 			return false;
 			break;
 		case IMEON:
 			if (record->event.pressed) {
-				ime_on_only = true;
+				imeOnOnly = true;
 				layer_on(_RAISE);
 				auto_mouse_layer_off();
 				update_tri_layer(_LOWER, _RAISE, _ADJUST);
@@ -393,7 +395,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 				auto_mouse_layer_off();
 				update_tri_layer(_LOWER, _RAISE, _ADJUST);
 		
-				if (ime_on_only) {
+				if (imeOnOnly) {
 					switch (get_highest_layer(default_layer_state)) {
 						case _WINDOWS:
 							tap_code(KC_INT4);
@@ -405,27 +407,27 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 							break;
 					}
 				}
-				ime_on_only = false;
+				imeOnOnly = false;
 			}
 			return false;
 			break;
 		case TGL_JIS:
 			if (record->event.pressed) {
-				jis_mode = !jis_mode;
+				isJisMode = !isJisMode;
 			}
 
 			return false;
 			break;
 		case M_TEAMS:
 			if (record->event.pressed) {
-				m_teams_on = !m_teams_on;
-				m_teams_delay = 0;
+				isTeamsOn = !isTeamsOn;
+				teamsDelay = 0;
 			}
 
 			return false;
 			break;
 		default:
-			if(jis_mode){
+			if(isJisMode){
 				result = twpair_on_jis(keycode, record);
 			}else{
 				result = true;
