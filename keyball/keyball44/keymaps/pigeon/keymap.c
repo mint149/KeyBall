@@ -199,7 +199,7 @@ void oledkit_render_info_user(void) {
 
 	switch(pairingId){
 		case 0:
-			oled_write_P(PSTR("BLE:0      "), false);
+			oled_write_P(PSTR("BLE:Macbook"), false);
 			break;
 
 		case 1:
@@ -215,7 +215,7 @@ void oledkit_render_info_user(void) {
 			break;
 
 		case 4:
-			oled_write_P(PSTR("BLE:4      "), false);
+			oled_write_P(PSTR("BLE:iPad   "), false);
 			break;
 
 		case 5:
