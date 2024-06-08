@@ -51,6 +51,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define ADV_ID7 KC_F22
 #define SEL_BLE KC_F23
 #define SEL_USB KC_F24
+#define DEL_ID0 KC_KP_0
+#define DEL_ID1 KC_KP_1
+#define DEL_ID2 KC_KP_2
+#define DEL_ID3 KC_KP_3
+#define DEL_ID4 KC_KP_4
+#define DEL_ID5 KC_KP_5
+#define DEL_ID6 KC_KP_6
+#define DEL_ID7 KC_KP_7
 
 #define M_TEAMS_REPEAT 10000
 
@@ -199,19 +207,19 @@ void oledkit_render_info_user(void) {
 
 	switch(pairingId){
 		case 0:
-			oled_write_P(PSTR("BLE:Macbook"), false);
+			oled_write_P(PSTR("BLE:HatoMBA"), false);
 			break;
 
 		case 1:
-			oled_write_P(PSTR("BLE:1      "), false);
+			oled_write_P(PSTR("BLE:OldiPad"), false);
 			break;
 
 		case 2:
-			oled_write_P(PSTR("BLE:2      "), false);
+			oled_write_P(PSTR("BLE:Empty  "), false);
 			break;
 
 		case 3:
-			oled_write_P(PSTR("BLE:3      "), false);
+			oled_write_P(PSTR("BLE:iPhone  "), false);
 			break;
 
 		case 4:
@@ -219,11 +227,11 @@ void oledkit_render_info_user(void) {
 			break;
 
 		case 5:
-			oled_write_P(PSTR("BLE:5      "), false);
+			oled_write_P(PSTR("BLE:GFold5 "), false);
 			break;
 
 		case 6:
-			oled_write_P(PSTR("BLE:6      "), false);
+			oled_write_P(PSTR("BLE:WinPC  "), false);
 			break;
 
 		case 7:
