@@ -70,7 +70,8 @@ enum custom_keycodes {
 	IMEOFF,
 	TGL_JIS,
 	M_TEAMS,
-	TGL_MS
+	TGL_MS,
+	TGL_LOCK
 };
 
 bool imeOffOnly = false;
@@ -80,6 +81,7 @@ bool isJisMode = true;
 bool isRecording = false;
 bool isTeamsOn = false;
 bool isMouseOnly = false;
+bool isKeyDisabled = false;
 int teamsDelay = 0;
 int pairingId = -1;
 
@@ -123,7 +125,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		_______, _______, WINDOWS, _______, _______, _______,                   _______, SEL_USB, ADV_ID0, ADV_ID1, ADV_ID2, ADV_ID3, 
 		_______, AD_WO_L, _______, _______, _______, _______,                   _______, TGL_JIS, ADV_ID4, ADV_ID5, ADV_ID6, ADV_ID7, 
 		M_TEAMS, _______, _______, _______, _______, SEL_BLE,                   _______,     MAC, _______, _______, _______, _______, 
-											_______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+											_______, _______, _______, _______, _______, _______, _______, _______, _______, TGL_LOCK
 	),
 	[_MOUSE] = LAYOUT_universal(
 		_______, _______, _______, _______, _______, _______,                   _______, PREVXLS, NEXTXLS, _______, _______, _______, 
@@ -290,6 +292,12 @@ void oledkit_render_info_user(void) {
 	}else{
 		oled_write_P(PSTR("                     "), false);
 	}
+	
+	if(isKeyDisabled){
+		oled_write_P(PSTR("--- INPUT LOCK:ON ---"), false);
+	}else{
+		oled_write_P(PSTR("                     "), false);
+	}
 }
 #endif
 
@@ -413,6 +421,21 @@ void matrix_scan_user(void) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+	// キー入力無効化機能
+	if(isKeyDisabled){
+		switch (keycode) {
+			case TGL_LOCK:
+				if (record->event.pressed) {
+					isKeyDisabled = false;
+				}
+				return false;
+
+			default:
+				// ロックキー以外のあらゆるキーコードの入力をキャンセルする
+				return false;
+		}
+	}
+
 	bool result = false;
 	// IMEキーの単押し判定用Switch
 	switch (keycode) {
@@ -528,7 +551,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 			}
 			return false;
 
-			break;
+		case TGL_LOCK:
+			if (record->event.pressed) {
+				isKeyDisabled = true;
+			}
+			return false;
 
 		case AD_WO_L:
 			return true;
