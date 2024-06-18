@@ -424,6 +424,33 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	// キー入力無効化機能
 	if(isKeyDisabled){
 		switch (keycode) {
+			case IMEOFF:
+				// Adjustレイヤーにロックキーを入れているため、キーロック中もレイヤ変更機能を動作させる必要がある
+				// ひとまず通常時のレイヤ移動キーからIME制御機能を抜いてそのまま持ってきている
+				// TODO:全く同じ処理なので関数化したほうがいい
+				if (record->event.pressed) {
+					layer_on(_LOWER);
+					auto_mouse_layer_off();
+					update_tri_layer(_LOWER, _RAISE, _ADJUST);
+				} else {
+					layer_off(_LOWER);
+					auto_mouse_layer_off();
+					update_tri_layer(_LOWER, _RAISE, _ADJUST);
+				}
+				return false;
+
+			case IMEON:
+				if (record->event.pressed) {
+					layer_on(_RAISE);
+					auto_mouse_layer_off();
+					update_tri_layer(_LOWER, _RAISE, _ADJUST);
+				} else {
+					layer_off(_RAISE);
+					auto_mouse_layer_off();
+					update_tri_layer(_LOWER, _RAISE, _ADJUST);
+				}
+				return false;
+
 			case TGL_LOCK:
 				if (record->event.pressed) {
 					isKeyDisabled = false;
@@ -554,6 +581,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 		case TGL_LOCK:
 			if (record->event.pressed) {
 				isKeyDisabled = true;
+				layer_off(_LOWER);
+				layer_off(_RAISE);
+				layer_off(_ADJUST);
+				auto_mouse_layer_off();
+				update_tri_layer(_LOWER, _RAISE, _ADJUST);
 			}
 			return false;
 
