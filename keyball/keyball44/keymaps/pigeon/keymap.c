@@ -207,35 +207,35 @@ void oledkit_render_info_user(void) {
 
 	switch(pairingId){
 		case 0:
-			oled_write_P(PSTR("BLE:HatoMBA"), false);
+			oled_write_P(PSTR("BT0:Macbook"), false);
 			break;
 
 		case 1:
-			oled_write_P(PSTR("BLE:OldiPad"), false);
+			oled_write_P(PSTR("BT1:iPadOld"), false);
 			break;
 
 		case 2:
-			oled_write_P(PSTR("BLE:Empty  "), false);
+			oled_write_P(PSTR("BT2:PC-K   "), false);
 			break;
 
 		case 3:
-			oled_write_P(PSTR("BLE:iPhone  "), false);
+			oled_write_P(PSTR("BT3:iPhone "), false);
 			break;
 
 		case 4:
-			oled_write_P(PSTR("BLE:iPad   "), false);
+			oled_write_P(PSTR("BT4:iPad   "), false);
 			break;
 
 		case 5:
-			oled_write_P(PSTR("BLE:GFold5 "), false);
+			oled_write_P(PSTR("BT5:Fold   "), false);
 			break;
 
 		case 6:
-			oled_write_P(PSTR("BLE:WinPC  "), false);
+			oled_write_P(PSTR("BT6:WinPC  "), false);
 			break;
 
 		case 7:
-			oled_write_P(PSTR("BLE:7      "), false);
+			oled_write_P(PSTR("BT7:-      "), false);
 			break;
 
 		default:
@@ -286,7 +286,7 @@ void oledkit_render_info_user(void) {
 	}
 
 	if(isTeamsOn){
-		oled_write_P(PSTR("--- TEAMS ENABLED ---"), false);
+		oled_write_P(PSTR("--- ANTI SLEEP:ON ---"), false);
 	}else{
 		oled_write_P(PSTR("                     "), false);
 	}
