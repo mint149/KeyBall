@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include QMK_KEYBOARD_H
 #include "quantum.h"
+// #include "os_detection.h"
 
 // レイヤー定義
 #define _WINDOWS 0
@@ -85,6 +86,7 @@ bool isMouseOnly = false;
 bool isKeyDisabled = false;
 int teamsDelay = 0;
 int pairingId = -1;
+os_variant_t currentOs = OS_UNSURE;
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -201,9 +203,56 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 //     return buf;
 // }
 
+bool process_detected_host_os_user(os_variant_t os){
+	currentOs = os;
+    switch (os) {
+        case OS_MACOS:
+			default_layer_set(1UL<<_MAC);
+			isScrollInvert = true;
+			isJisMode = false;
+            break;
+        case OS_IOS:
+			default_layer_set(1UL<<_MAC);
+			isScrollInvert = true;
+			isJisMode = true;
+            break;
+        case OS_WINDOWS:
+			default_layer_set(1UL<<_WINDOWS);
+			isScrollInvert = false;
+			isJisMode = true;
+            break;
+        case OS_LINUX:
+            break;
+        case OS_UNSURE:
+            break;
+    }
+	return true;
+}
+
 void oledkit_render_info_user(void) {
 	// keyball_oled_render_keyinfo();
 	// keyball_oled_render_ballinfo();
+
+    // switch (currentOs) {
+    //     case OS_UNSURE:
+    //         oled_write_P(PSTR("OS_UNSURE"), false);
+    //         break;
+    //     case OS_LINUX:
+    //         oled_write_P(PSTR("OS_LINUX"), false);
+    //         break;
+    //     case OS_WINDOWS:
+    //         oled_write_P(PSTR("OS_WINDOWS"), false);
+    //         break;
+    //     case OS_MACOS:
+    //         oled_write_P(PSTR("OS_MACOS"), false);
+    //         break;
+    //     case OS_IOS:
+    //         oled_write_P(PSTR("OS_IOS"), false);
+    //         break;
+    //     default:
+    //         oled_write_P(PSTR("Unknown"), false);
+	// 		break;
+    // }
 
 	if(isScrollInvert){
     	oled_write_P(PSTR("SCRL:Rev  "), false);
