@@ -311,7 +311,7 @@ void oledkit_render_info_user(void) {
 #endif
 
 // マクロの記録を開始する時に起動されます。
-void dynamic_macro_record_start_user(void){
+void dynamic_macro_record_start_user(int8_t direction){
 	isRecording = true;
 }
 
