@@ -17,7 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include QMK_KEYBOARD_H
-
 #include "quantum.h"
 
 // レイヤー定義
@@ -71,12 +70,14 @@ enum custom_keycodes {
 	TGL_JIS,
 	M_TEAMS,
 	TGL_MS,
-	TGL_LOCK
+	TGL_LOCK,
+	TGL_SCRL,
 };
 
 bool imeOffOnly = false;
 bool imeOnOnly = false;
 bool isJisMode = true;
+bool isScrollInvert = false;
 
 bool isRecording = false;
 bool isTeamsOn = false;
@@ -123,7 +124,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 	[_ADJUST] = LAYOUT_universal(
 		_______, _______, WINDOWS, _______, _______, _______,                   _______, SEL_USB, ADV_ID0, ADV_ID1, ADV_ID2, ADV_ID3, 
-		_______, AD_WO_L, _______, _______, _______, _______,                   _______, TGL_JIS, ADV_ID4, ADV_ID5, ADV_ID6, ADV_ID7, 
+		_______, AD_WO_L,TGL_SCRL, _______, _______, _______,                   _______, TGL_JIS, ADV_ID4, ADV_ID5, ADV_ID6, ADV_ID7, 
 		M_TEAMS, _______, _______, _______, _______, SEL_BLE,                   _______,     MAC, _______, _______, _______, _______, 
 											_______, _______, _______, _______, _______, _______, _______, _______, _______, TGL_LOCK
 	),
@@ -172,40 +173,47 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 
 #include "lib/oledkit/oledkit.h"
 
-static const char *format_4d(int8_t d) {
-    static char buf[5] = {0}; // max width (4) + NUL (1)
-    char        lead   = ' ';
-    if (d < 0) {
-        d    = -d;
-        lead = '-';
-    }
-    buf[3] = (d % 10) + '0';
-    d /= 10;
-    if (d == 0) {
-        buf[2] = lead;
-        lead   = ' ';
-    } else {
-        buf[2] = (d % 10) + '0';
-        d /= 10;
-    }
-    if (d == 0) {
-        buf[1] = lead;
-        lead   = ' ';
-    } else {
-        buf[1] = (d % 10) + '0';
-        d /= 10;
-    }
-    buf[0] = lead;
-    return buf;
-}
+// CPI表示時に使用
+// static const char *format_4d(int8_t d) {
+//     static char buf[5] = {0}; // max width (4) + NUL (1)
+//     char        lead   = ' ';
+//     if (d < 0) {
+//         d    = -d;
+//         lead = '-';
+//     }
+//     buf[3] = (d % 10) + '0';
+//     d /= 10;
+//     if (d == 0) {
+//         buf[2] = lead;
+//         lead   = ' ';
+//     } else {
+//         buf[2] = (d % 10) + '0';
+//         d /= 10;
+//     }
+//     if (d == 0) {
+//         buf[1] = lead;
+//         lead   = ' ';
+//     } else {
+//         buf[1] = (d % 10) + '0';
+//         d /= 10;
+//     }
+//     buf[0] = lead;
+//     return buf;
+// }
 
 void oledkit_render_info_user(void) {
 	// keyball_oled_render_keyinfo();
 	// keyball_oled_render_ballinfo();
 
-    oled_write_P(PSTR("CPI:"), false);
-    oled_write(format_4d(keyball_get_cpi()) + 1, false);
-    oled_write_P(PSTR("00 "), false);
+	if(isScrollInvert){
+    	oled_write_P(PSTR("SCRL:Rev  "), false);
+	}else{
+    	oled_write_P(PSTR("SCRL:Nml  "), false);
+	}
+
+    // oled_write_P(PSTR("CPI:"), false);
+    // oled_write(format_4d(keyball_get_cpi()) + 1, false);
+    // oled_write_P(PSTR("00 "), false);
 
 	switch(pairingId){
 		case 0:
@@ -402,6 +410,15 @@ void pointing_device_init_user(void) {
 	set_auto_mouse_enable(true);         // always required before the auto mouse feature will work
 }
 
+// トラックボールのセンサ値取得時に呼ばれるイベント
+report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
+	if(isScrollInvert){
+	    mouse_report.v = mouse_report.v * -1;
+	}
+
+    return mouse_report;
+}
+
 //-------------------------------------------------------------
 //
 //  matrix_scan_user関数の中でフラグをチェックして必要なマクロを実行する。
@@ -587,6 +604,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 				layer_off(_ADJUST);
 				auto_mouse_layer_off();
 				update_tri_layer(_LOWER, _RAISE, _ADJUST);
+			}
+			return false;
+
+		case TGL_SCRL:
+			if (record->event.pressed) {
+				isScrollInvert = !isScrollInvert;
 			}
 			return false;
 
