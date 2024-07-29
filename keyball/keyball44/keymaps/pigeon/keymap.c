@@ -500,6 +500,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 		case MAC:
 			if (record->event.pressed) {
 				default_layer_set(1UL<<_MAC);
+				isScrollInvert = true;
 			}
 			return false;
 			break;
@@ -507,6 +508,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 		case WINDOWS:
 			if (record->event.pressed) {
 				default_layer_set(1UL<<_WINDOWS);
+				isScrollInvert = false;
 			}
 			return false;
 			break;
