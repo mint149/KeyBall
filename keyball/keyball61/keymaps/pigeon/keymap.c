@@ -60,7 +60,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DEL_ID6 KC_KP_6
 #define DEL_ID7 KC_KP_7
 
-#define M_TEAMS_REPEAT 10000
+#define M_TEAMS_REPEAT 1500
 
 // キーコード定義
 enum custom_keycodes {
@@ -184,32 +184,32 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 
 #include "lib/oledkit/oledkit.h"
 // CPI表示時に使用
-// static const char *format_4d(int8_t d) {
-//     static char buf[5] = {0}; // max width (4) + NUL (1)
-//     char        lead   = ' ';
-//     if (d < 0) {
-//         d    = -d;
-//         lead = '-';
-//     }
-//     buf[3] = (d % 10) + '0';
-//     d /= 10;
-//     if (d == 0) {
-//         buf[2] = lead;
-//         lead   = ' ';
-//     } else {
-//         buf[2] = (d % 10) + '0';
-//         d /= 10;
-//     }
-//     if (d == 0) {
-//         buf[1] = lead;
-//         lead   = ' ';
-//     } else {
-//         buf[1] = (d % 10) + '0';
-//         d /= 10;
-//     }
-//     buf[0] = lead;
-//     return buf;
-// }
+static const char *format_4d(int8_t d) {
+    static char buf[5] = {0}; // max width (4) + NUL (1)
+    char        lead   = ' ';
+    if (d < 0) {
+        d    = -d;
+        lead = '-';
+    }
+    buf[3] = (d % 10) + '0';
+    d /= 10;
+    if (d == 0) {
+        buf[2] = lead;
+        lead   = ' ';
+    } else {
+        buf[2] = (d % 10) + '0';
+        d /= 10;
+    }
+    if (d == 0) {
+        buf[1] = lead;
+        lead   = ' ';
+    } else {
+        buf[1] = (d % 10) + '0';
+        d /= 10;
+    }
+    buf[0] = lead;
+    return buf;
+}
 
 bool process_detected_host_os_user(os_variant_t os){
 	currentOs = os;
@@ -353,7 +353,8 @@ void oledkit_render_info_user(void) {
 	}
 
 	if(isTeamsOn){
-		oled_write_P(PSTR("--- ANTI SLEEP:ON ---"), false);
+		oled_write_P(PSTR("- ANTI SLEEP:ON -"), false);
+	    oled_write(format_4d(teamsDelay * 100 / M_TEAMS_REPEAT), false);
 	}else{
 		oled_write_P(PSTR("                     "), false);
 	}
