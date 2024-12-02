@@ -60,7 +60,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DEL_ID6 KC_KP_6
 #define DEL_ID7 KC_KP_7
 
-#define M_TEAMS_REPEAT 10000
+#define ANTI_SLEEP_INTERVAL 10000
 
 // キーコード定義
 enum custom_keycodes {
@@ -477,7 +477,7 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
 // Runs constantly in the background, in a loop.
 void matrix_scan_user(void) {
 	if (isTeamsOn) {
-		if (teamsDelay >= M_TEAMS_REPEAT) {
+		if (teamsDelay >= ANTI_SLEEP_INTERVAL) {
 			// SEND_STRING("MCR");
 			send_string_with_delay("MCR\b\b\b", 200);
 			teamsDelay = 0;
