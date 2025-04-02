@@ -100,27 +100,27 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		KC_TAB , KC_Q   , KC_W   , KC_E   , KC_R   , KC_T   ,                   KC_Y   , KC_U   , KC_I   , KC_O   , KC_P   , KC_BSPC,
 		KC_LCTL, KC_A   , KC_S   , KC_D   , KC_F   , KC_G   ,                   KC_H   , KC_J   , KC_K   , KC_L   , KC_SCLN, KC_ENT ,
 		KC_LSFT, KC_Z   , KC_X   , KC_C   , KC_V   , KC_B   ,                   KC_N   , KC_M   , KC_COMM, KC_DOT , KC_SLSH, KC_QUOT,
-											DM_PLY1, KC_LGUI, KC_LALT, IMEOFF , KC_SPC , KC_RGUI, IMEON  , NOSPACE, NOSPACE, KC_PSCR
+											DM_PLY1, KC_LGUI, KC_LALT, IMEOFF , KC_SPC , KC_RGUI, IMEON  , NOSPACE, NOSPACE, KC_RCTL
 	),
 
 	[_MAC] = LAYOUT_universal(
 		KC_TAB , KC_Q   , KC_W   , KC_E   , KC_R   , KC_T   ,                   KC_Y   , KC_U   , KC_I   , KC_O   , KC_P   , KC_BSPC,
 		KC_LGUI, KC_A   , KC_S   , KC_D   , KC_F   , KC_G   ,                   KC_H   , KC_J   , KC_K   , KC_L   , KC_SCLN, KC_ENT ,
 		KC_LSFT, KC_Z   , KC_X   , KC_C   , KC_V   , KC_B   ,                   KC_N   , KC_M   , KC_COMM, KC_DOT , KC_SLSH, KC_QUOT,
-											DM_PLY1, KC_LALT, KC_LGUI, IMEOFF , KC_SPC , KC_LCTL, IMEON  , NOSPACE, NOSPACE, DELETED
+											DM_PLY1, KC_LALT, KC_LGUI, IMEOFF , KC_SPC , KC_LCTL, IMEON  , NOSPACE, NOSPACE, KC_RGUI
 	),
 
 	[_LOWER] = LAYOUT_universal(
-		KC_ESC , _______, KC_F2  , KC_F3  , KC_F4  , KC_F5  ,                   KC_1   , KC_2   , KC_3   , KC_4   , KC_5   , KC_DEL , 
-		_______, KC_F6  , KC_F7  , KC_F8  , KC_F9  , KC_F10 ,                   KC_6   , KC_7   , KC_8   , KC_9   , KC_0   , _______, 
-		_______, KC_F11 , KC_F12 , _______, _______, _______,                   KC_MINS, KC_EQL , KC_LBRC, KC_RBRC, KC_BSLS, KC_GRV ,
+		KC_ESC , _______, KC_F2  , KC_F3  , KC_F4  , KC_F5  ,                   _______, KC_7   , KC_8   , KC_9   , _______, KC_DEL , 
+		_______, KC_F6  , KC_F7  , KC_F8  , KC_F9  , KC_F10 ,                   _______, KC_4   , KC_5   , KC_6   , _______, _______, 
+		_______, KC_F11 , KC_F12 , _______, _______, _______,                   KC_0   , KC_1   , KC_2   , KC_3   , KC_BSLS, KC_GRV ,
 											_______, _______, _______, _______, _______, _______, _______, _______, _______, TGL_MS
 	),
 
 	[_RAISE] = LAYOUT_universal(
-		KC_ESC , _______, _______, _______, _______, _______,                   KC_HOME, PREVXLS, NEXTXLS,  KC_END, _______, KC_DEL , 
-		_______,CPI_D100,SCRL_DVI,SCRL_DVD,CPI_I100,KBC_SAVE,                   KC_LEFT, KC_DOWN, KC_UP  ,KC_RIGHT, _______, _______, 
-		_______, _______, _______, _______, _______, _______,                   KC_MINS, KC_EQL , KC_LBRC, KC_RBRC, KC_BSLS, KC_GRV ,
+		KC_ESC , _______, _______, KC_LBRC, KC_RBRC, _______,                   KC_HOME, PREVXLS, NEXTXLS,  KC_END, _______, KC_DEL , 
+		_______, _______, _______, LSFT(KC_9), LSFT(KC_0), _______,             KC_LEFT, KC_DOWN, KC_UP  ,KC_RIGHT, _______, _______, 
+		_______, _______, _______, LSFT(KC_LBRC), LSFT(KC_RBRC), _______,       KC_MINS, KC_EQL , _______, _______, _______, _______ ,
 											DM_REC1, _______, _______, _______, _______, _______, _______, _______, _______, _______
 	),
 
@@ -176,32 +176,32 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 #include "lib/oledkit/oledkit.h"
 
 // CPI表示時に使用
-// static const char *format_4d(int8_t d) {
-//     static char buf[5] = {0}; // max width (4) + NUL (1)
-//     char        lead   = ' ';
-//     if (d < 0) {
-//         d    = -d;
-//         lead = '-';
-//     }
-//     buf[3] = (d % 10) + '0';
-//     d /= 10;
-//     if (d == 0) {
-//         buf[2] = lead;
-//         lead   = ' ';
-//     } else {
-//         buf[2] = (d % 10) + '0';
-//         d /= 10;
-//     }
-//     if (d == 0) {
-//         buf[1] = lead;
-//         lead   = ' ';
-//     } else {
-//         buf[1] = (d % 10) + '0';
-//         d /= 10;
-//     }
-//     buf[0] = lead;
-//     return buf;
-// }
+static const char *format_4d(int8_t d) {
+    static char buf[5] = {0}; // max width (4) + NUL (1)
+    char        lead   = ' ';
+    if (d < 0) {
+        d    = -d;
+        lead = '-';
+    }
+    buf[3] = (d % 10) + '0';
+    d /= 10;
+    if (d == 0) {
+        buf[2] = lead;
+        lead   = ' ';
+    } else {
+        buf[2] = (d % 10) + '0';
+        d /= 10;
+    }
+    if (d == 0) {
+        buf[1] = lead;
+        lead   = ' ';
+    } else {
+        buf[1] = (d % 10) + '0';
+        d /= 10;
+    }
+    buf[0] = lead;
+    return buf;
+}
 
 bool process_detected_host_os_user(os_variant_t os){
 	currentOs = os;
@@ -259,10 +259,6 @@ void oledkit_render_info_user(void) {
 	}else{
     	oled_write_P(PSTR("SCRL:Nml  "), false);
 	}
-
-    // oled_write_P(PSTR("CPI:"), false);
-    // oled_write(format_4d(keyball_get_cpi()) + 1, false);
-    // oled_write_P(PSTR("00 "), false);
 
 	switch(pairingId){
 		case 0:
@@ -344,18 +340,22 @@ void oledkit_render_info_user(void) {
 		oled_write_P(PSTR("    "), false);
 	}
 
+    oled_write_P(PSTR("CPI:"), false);
+    oled_write(format_4d(keyball_get_cpi()) + 1, false);
+    oled_write_P(PSTR("00 "), false);
+
 	if(isTeamsOn){
-		oled_write_P(PSTR("--- ANTI SLEEP:ON ---"), false);
+		oled_write_P(PSTR("[AS]"), false);
 	}else{
-		oled_write_P(PSTR("                     "), false);
+		oled_write_P(PSTR("____"), false);
 	}
+	oled_write_P(PSTR("|"), false);
 	
 	if(isKeyDisabled){
-		oled_write_P(PSTR("--- INPUT LOCK:ON ---"), false);
+		oled_write_P(PSTR("[IL]  "), false);
 	}else{
-		oled_write_P(PSTR("                     "), false);
+		oled_write_P(PSTR("____  "), false);
 	}
-
 }
 #endif
 
