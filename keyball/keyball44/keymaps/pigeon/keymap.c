@@ -111,21 +111,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	),
 
 	[_LOWER] = LAYOUT_universal(
-		KC_ESC , _______, KC_F2  , KC_F3  , KC_F4  , KC_F5  ,                   _______, KC_7   , KC_8   , KC_9   , _______, KC_DEL , 
-		_______, KC_F6  , KC_F7  , KC_F8  , KC_F9  , KC_F10 ,                   _______, KC_4   , KC_5   , KC_6   , _______, _______, 
-		_______, KC_F11 , KC_F12 , _______, _______, _______,                   KC_0   , KC_1   , KC_2   , KC_3   , KC_BSLS, KC_GRV ,
-											_______, _______, _______, _______, _______, _______, _______, _______, _______, TGL_MS
+		KC_ESC , _______, KC_F2  , KC_F3  , KC_F4  , KC_F5  ,                   KC_1   , KC_2   , KC_3   , KC_4   , KC_5   , KC_DEL , 
+		_______, KC_F6  , KC_F7  , KC_F8  , KC_F9  , KC_F10 ,                   KC_6   , KC_7   , KC_8   , KC_9   , KC_0   , _______, 
+		_______, KC_F11 , KC_F12 , _______, _______, _______,                   KC_MINS, KC_EQL , KC_LBRC, KC_RBRC, KC_BSLS, KC_GRV ,
+		_______, _______, _______, _______, _______, _______, _______, _______, _______, TGL_MS
 	),
 
 	[_RAISE] = LAYOUT_universal(
 		KC_ESC , _______, _______, KC_LBRC, KC_RBRC, _______,                   KC_HOME, PREVXLS, NEXTXLS,  KC_END, _______, KC_DEL , 
 		_______, _______, _______, LSFT(KC_9), LSFT(KC_0), _______,             KC_LEFT, KC_DOWN, KC_UP  ,KC_RIGHT, _______, _______, 
-		_______, _______, _______, LSFT(KC_LBRC), LSFT(KC_RBRC), _______,       KC_MINS, KC_EQL , _______, _______, _______, _______ ,
+		_______, _______, _______, LSFT(KC_LBRC), LSFT(KC_RBRC), _______,       KC_MINS, KC_EQL , KC_LBRC, KC_RBRC, KC_BSLS, KC_GRV ,
 											DM_REC1, _______, _______, _______, _______, _______, _______, _______, _______, _______
 	),
 
 	[_ADJUST] = LAYOUT_universal(
-		_______, _______, WINDOWS, _______, _______, _______,                   _______, SEL_USB, ADV_ID0, ADV_ID1, ADV_ID2, ADV_ID3, 
+		_______, _______, WINDOWS, CPI_D100, CPI_I100, KBC_SAVE,                _______, SEL_USB, ADV_ID0, ADV_ID1, ADV_ID2, ADV_ID3, 
 		_______, AD_WO_L,TGL_SCRL, _______, _______, _______,                   _______, TGL_JIS, ADV_ID4, ADV_ID5, ADV_ID6, ADV_ID7, 
 		M_TEAMS, _______, _______, _______, _______, SEL_BLE,                   _______,     MAC, _______, _______, _______, _______, 
 											_______, _______, _______, _______, _______, _______, _______, _______, _______, TGL_LOCK
